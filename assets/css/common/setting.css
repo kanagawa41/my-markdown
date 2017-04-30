@@ -1,0 +1,15 @@
+html {
+    overflow-y: scroll;
+    font-size: 62.5%;
+}
+
+body {
+    overflow: hidden;
+    font-size: 1.4rem;
+    font-family: "times new roman";
+}
+
+a {
+	color: #c0c0c0;
+	text-decoration: none;
+}
