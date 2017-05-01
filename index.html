@@ -9,6 +9,7 @@
   <title>サンプルHTML</title>
   <link rel="stylesheet" type="text/css" href="assets/css/common/reset.css">
   <link rel="stylesheet" type="text/css" href="assets/css/common/setting.css">
+  <link rel="stylesheet" type="text/css" href="assets/css/index/index.css">
   <link rel="stylesheet" type="text/css" href="assets/css/bootstrap-v3-3-7/bootstrap.min.css">
 </head>
   <body>
@@ -25,7 +26,13 @@
       <!-- Main -->
       <div id="main-wrapper">
         <div id="main" class="container">
-          メイン
+          <!-- Main -->
+          <div id="visual-area">
+          </div>
+          <div id="making-area">
+            <textarea id="content" rows="4" class="form-control input-xs" style="font-size:16px;"></textarea>
+            <button id="create_btn" type="button" class="btn btn-primary">反映</button>
+          </div>
         </div>
       </div>
       <!-- Footer -->
@@ -52,6 +59,8 @@
     <script type="text/javascript" src="assets/js/common/jquery-3.2.1.min.js"></script>
     <script type="text/javascript" src="assets/js/bootstrap-v3-3-7/bootstrap.min.js"></script>
     <script type="text/javascript" src="assets/js/common/my-common.js"></script>
+    <script type="text/javascript" src="assets/js/index/index-controller.js"></script>
+    <script type="text/javascript" src="assets/js/index/common-enum.js"></script>
     <script type="text/javascript">
       // AJAXのリクエストパラメータのひな形
       var getBasicAjaxRequest = function(){
@@ -86,7 +95,8 @@
       };
 
       $(document).ready(function(){
-        // 初期処理
+        var indexController = new IndexController();
+        indexController.init();
 
         // モーダル表示
         // $('#sample-modal').modal('show');
