@@ -288,7 +288,7 @@ IndexController.prototype.createTitleHtml = function(element) {
 IndexController.prototype.createTaskHtml = function(element) {
 	var index = element[IndexController.ELEMENT.INDEX];
 	var indent = element[IndexController.ELEMENT.INDENT];
-	var content = element[IndexController.ELEMENT.CONTENT];
+	var content = element[IndexController.ELEMENT.CONTENT] != null ? element[IndexController.ELEMENT.CONTENT] : '';
 
 	var symbol = 'mark-task';
 	var markIcon = 'glyphicon glyphicon-unchecked';
@@ -310,7 +310,7 @@ IndexController.prototype.createTaskHtml = function(element) {
 IndexController.prototype.createDoneHtml = function(element) {
 	var index = element[IndexController.ELEMENT.INDEX];
 	var indent = element[IndexController.ELEMENT.INDENT];
-	var content = element[IndexController.ELEMENT.CONTENT];
+	var content = element[IndexController.ELEMENT.CONTENT] != null ? element[IndexController.ELEMENT.CONTENT] : '';
 	var doneChildren = element[IndexController.ELEMENT.DONE_CHILDREN];
 
 	var symbol = 'mark-done';
@@ -333,7 +333,7 @@ IndexController.prototype.createDoneHtml = function(element) {
 IndexController.prototype.createSupplementHtml = function(element) {
 	var index = element[IndexController.ELEMENT.INDEX];
 	var indent = element[IndexController.ELEMENT.INDENT];
-	var content = element[IndexController.ELEMENT.CONTENT];
+	var content = element[IndexController.ELEMENT.CONTENT] != null ? element[IndexController.ELEMENT.CONTENT] : '';
 
 	var symbol = 'mark-supplement';
 	var markIcon = 'glyphicon glyphicon-arrow-right';
@@ -355,7 +355,7 @@ IndexController.prototype.createSupplementHtml = function(element) {
 IndexController.prototype.createCommentHtml = function(element) {
 	var index = element[IndexController.ELEMENT.INDEX];
 	var indent = element[IndexController.ELEMENT.INDENT];
-	var content = element[IndexController.ELEMENT.CONTENT];
+	var content = element[IndexController.ELEMENT.CONTENT] != null ? element[IndexController.ELEMENT.CONTENT] : '';
 
 	var symbol = 'mark-comment';
 	var markIcon = 'glyphicon glyphicon-asterisk';
@@ -377,7 +377,7 @@ IndexController.prototype.createCommentHtml = function(element) {
 IndexController.prototype.createConclusionHtml = function(element) {
 	var index = element[IndexController.ELEMENT.INDEX];
 	var indent = element[IndexController.ELEMENT.INDENT];
-	var content = element[IndexController.ELEMENT.CONTENT];
+	var content = element[IndexController.ELEMENT.CONTENT] != null ? element[IndexController.ELEMENT.CONTENT] : '';
 
 	var symbol = 'mark-conclusion';
 	var markIcon = 'glyphicon glyphicon-thumbs-up';
