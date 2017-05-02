@@ -33,7 +33,7 @@ IndexController.prototype.initEvent = function() {
 	var controller = this;
   $('#making-area').find('#create_btn').on('click', function() {
     controller.updateVisual();
-
+/*
     // 各コメントにトグルイベントを設定
 	$('.mark-comment .glyphicon').each(function(i){
 		var that = this;
@@ -41,6 +41,7 @@ IndexController.prototype.initEvent = function() {
 			$(that).parent().find('.my-content').slideToggle();
 		});
 	});
+*/
 
     // 済タスクの折り畳み機能を設定
 	$('#sidebar-area .row.toggle').each(function(i){
