@@ -6,6 +6,10 @@
     line-height: 5rem;
     color: #09c; }
 
+#description {
+    padding-left: 1rem; 
+    font-size: 1rem;}
+
 /* タイトル */
 #area-title {
     font-size: 1rem;
@@ -83,7 +87,7 @@
  * 各要素ごとの設定
  */
 .my-title {
-    /*font-size: 2em;*/
+    font-size: 2em;
     color: #09c; }
 
 .my-mark {
