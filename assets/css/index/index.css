@@ -1,45 +1,89 @@
-/* エリアの設定 */
-#sidebar-area {
-    width: 1.5em;
-    float: left;
-}
+/* ヘッダー */
+#header {
+    padding-left: 1rem;
+    width: 100%;
+    height: 5rem;
+    line-height: 5rem;
+    color: #09c; }
+
+/* タイトル */
+#area-title {
+    font-size: 1rem;
+    color: #c7c7c7;
+    width: 100%; }
+    #area-title #making-title-wrapper {
+        float:left;
+        width: 50%; } 
+            #area-title #making-title-wrapper #title {
+            padding-left: 1rem;
+            line-height: 3rem;
+            height: 3rem;
+            border: solid 1px #E8E8E8; }
+    #area-title #visual-title-wrapper {
+        float:left;
+        width: 50%; }
+            #area-title #visual-title-wrapper #title {
+            padding-left: 1rem;
+            line-height: 3rem;
+            height: 3rem;
+            border: solid 1px #E8E8E8; }
+
+/* 記載部 */
+#making-area {
+    float:left; }
+    #making-area #content.form-control{
+        overflow-x: scroll;
+        overflow-y: scroll;
+        font-size: 1.5rem;
+        height: 100%;
+        width: 100%; }
+
+#visual-area {
+    float:left;
+    overflow: scroll;
+    overflow-x: scroll;
+    overflow-y: scroll;
+    font-family: Arial,"Helvetica Neue",Helvetica,sans-serif; }
+
 #main-area {
     width: 95%;
-    float: left;
-}
+    float: left; }
+    #main-area .my_row {
+        padding-left: 5px;
+        width: 100%;
+        height: 3rem; }
+        #main-area .my_row.focusout {
+            border-bottom: solid 1px #f5f5f5; }
+        #main-area .my_row.focusin {
+            border-bottom: solid 1px #000; }
+            #main-area .my_row .my-mark { /* タスクマーク */
+                float: left;
+                padding-right: 5px;
+                line-height: 3rem; }
+            #main-area .my_row .my-content { /* タスク内容 */
+                float: left;
+                line-height: 3rem; }
 
-.row {
-    height: 30px;
-    width: 100%;
-    font-family: Arial,"Helvetica Neue",Helvetica,sans-serif; }
-    .row.focusout {
-        border-bottom: solid 1px #f5f5f5; }
-    .row.focusin {
-        border-bottom: solid 1px #000; }
-        .row .my-mark { /* タスクマーク */
-            float: left;
-            padding-right: 5px;
-            line-height: 30px; }
-        .row .my-content { /* タスク内容 */
-            float: left;
-            line-height: 30px; }
+/* エリアの設定 */
+#sidebar-area {
+    float: left; }
+    #sidebar-area .my_row {
+        line-height: 3rem;
+        height: 3rem; }
 
 /**
  * 各要素ごとの設定
  */
 .my-title {
     /*font-size: 2em;*/
-    color: #09c;
-}
+    color: #09c; }
 
 .my-mark {
     /*color: #09c;*/
-    color: #000;
-}
+    color: #000; }
 
 .mark-done .my-mark {
-    color: #c7c7c7;
-}
+    color: #c7c7c7; }
 
 .mark-task {
     background-color: #fff; } 

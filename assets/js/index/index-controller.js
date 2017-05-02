@@ -24,6 +24,24 @@ IndexController.ELEMENT = {
  */
 IndexController.prototype.init = function() {
   this.initEvent();
+  this.initVisual();
+}
+
+/**
+ * ビジュアルの設定
+ */
+IndexController.prototype.initVisual = function() {
+	var windowWidth = $(window).width();
+	var partsWidth = windowWidth / 2;
+	$('#making-area').width(partsWidth);
+	$('#visual-area').width(partsWidth);
+
+	// 高さに影響を与える要素ができた場合、それを引くようにする
+	var windowHeight = $(window).height()
+		- $('#header').height()
+		- $('#making-title-wrapper').height();
+	$('#making-area').height(windowHeight);
+	$('#visual-area').height(windowHeight);
 }
 
 /**
@@ -31,8 +49,16 @@ IndexController.prototype.init = function() {
  */
 IndexController.prototype.initEvent = function() {
 	var controller = this;
-  $('#making-area').find('#create_btn').on('click', function() {
-    controller.updateVisual();
+	var contentOld = "";
+ 	$('#making-area #content').keyup(function(e) {
+	    var contentNew = $('#making-area #content').val();
+        if(contentNew != contentOld){
+            contentOld = contentNew;
+		    controller.updateVisual();
+		    controller.setEventAfterDraw();
+        }
+	});
+
 /*
     // 各コメントにトグルイベントを設定
 	$('.mark-comment .glyphicon').each(function(i){
@@ -43,8 +69,15 @@ IndexController.prototype.initEvent = function() {
 	});
 */
 
+}
+
+
+/**
+ * 要素が書き出された後のイベントの設定
+ */
+IndexController.prototype.setEventAfterDraw = function() {
     // 済タスクの折り畳み機能を設定
-	$('#sidebar-area .row.toggle').each(function(i){
+	$('#sidebar-area .my_row.toggle').each(function(i){
 		var that = this;
 		$(that).on('click', function() {
 			var targetRows = $(that).find('[name="target-row"]').val().split(',');
@@ -78,7 +111,7 @@ IndexController.prototype.initEvent = function() {
 	});
 
     // 各コメントにトグルイベントを設定
-	$('#main-area .row').each(function(i){
+	$('#main-area .my_row').each(function(i){
 		var that = this;
 		$(that).hover(
 			function() { // フォーカスオン
@@ -91,8 +124,6 @@ IndexController.prototype.initEvent = function() {
 			}
 		);
 	});
-
-  });
 }
 
 /**
@@ -137,13 +168,13 @@ IndexController.prototype.toSidebarHtml = function(element) {
 	var index = element[IndexController.ELEMENT.INDEX];
 
 	if(mark != Enum.MARK.DONE || doneChildren == null) { 
-		return '<div id="row_' + index + '" class="row">&nbsp;<br /></div>'; 
+		return '<div id="row_' + index + '" class="my_row">&nbsp;<br /></div>'; 
 	}
 
 	var markIcon = 'glyphicon glyphicon-chevron-down';
 
 	var htmlChar = '';
-	htmlChar += '<div id="row_' + index + '" class="row toggle">';
+	htmlChar += '<div id="row_' + index + '" class="my_row toggle">';
 	htmlChar += '  <span class="my-mark ' + markIcon + '"></span>';
 	htmlChar += '  <input type="hidden" name="target-row" value="' + doneChildren.join(',') + '">';
 	htmlChar += '</div>';
@@ -200,10 +231,10 @@ IndexController.prototype.createTitleHtml = function(element) {
 	var indent = element[IndexController.ELEMENT.INDENT];
 	var content = element[IndexController.ELEMENT.CONTENT];
 
-	if(content == null) { return '<div id="row_' + index + '" class="row"><br /></div>'; }
+	if(content == null) { return '<div id="row_' + index + '" class="my_row"><br /></div>'; }
 
 	var htmlChar = '';
-	htmlChar += '<div id="row_' + index + '" class="row focusout">';
+	htmlChar += '<div id="row_' + index + '" class="my_row focusout">';
 	htmlChar += ' <div class="my-title">';
 	htmlChar += '  <div class="my-content">' + content + '</div>';
 	htmlChar += ' </div>';		
@@ -224,7 +255,7 @@ IndexController.prototype.createTaskHtml = function(element) {
 	var markIcon = 'glyphicon glyphicon-unchecked';
 
 	var htmlChar = '';
-	htmlChar += '<div id="row_' + index + '" class="row ' + symbol + ' focusout">';
+	htmlChar += '<div id="row_' + index + '" class="my_row ' + symbol + ' focusout">';
 	htmlChar += ' <div class="my-indent" style="margin-left:' + indent + 'em;">';
 	htmlChar += '  <span class="my-mark ' + markIcon + '"></span>';
 	htmlChar += '  <div class="my-content char-font">' + content + '</div>';
@@ -247,7 +278,7 @@ IndexController.prototype.createDoneHtml = function(element) {
 	var markIcon = 'glyphicon glyphicon-check';
 
 	var htmlChar = '';
-	htmlChar += '<div id="row_' + index + '" class="row ' + symbol + ' focusout">';
+	htmlChar += '<div id="row_' + index + '" class="my_row ' + symbol + ' focusout">';
 	htmlChar += ' <div class="my-indent" style="margin-left:' + indent + 'em;">';
 	htmlChar += '  <span class="my-mark ' + markIcon + '"></span>';
 	htmlChar += '  <div class="my-content char-font">' + content + '</div>';
@@ -269,7 +300,7 @@ IndexController.prototype.createSupplementHtml = function(element) {
 	var markIcon = 'glyphicon glyphicon-arrow-right';
 
 	var htmlChar = '';
-	htmlChar += '<div id="row_' + index + '" class="row ' + symbol + ' focusout">';
+	htmlChar += '<div id="row_' + index + '" class="my_row ' + symbol + ' focusout">';
 	htmlChar += ' <div class="my-indent" style="margin-left:' + indent + 'em;">';
 	htmlChar += '  <span class="my-mark ' + markIcon + '"></span>';
 	htmlChar += '  <div class="my-content char-font">' + content + '</div>';
@@ -291,7 +322,7 @@ IndexController.prototype.createCommentHtml = function(element) {
 	var markIcon = 'glyphicon glyphicon-asterisk';
 
 	var htmlChar = '';
-	htmlChar += '<div id="row_' + index + '" class="row ' + symbol + ' focusout">';
+	htmlChar += '<div id="row_' + index + '" class="my_row ' + symbol + ' focusout">';
 	htmlChar += ' <div class="my-indent" style="margin-left:' + indent + 'em;">';
 	htmlChar += '  <span class="my-mark ' + markIcon + '"></span>';
 	htmlChar += '  <div class="my-content char-font">' + content + '</div>';
@@ -313,7 +344,7 @@ IndexController.prototype.createConclusionHtml = function(element) {
 	var markIcon = 'glyphicon glyphicon-thumbs-up';
 
 	var htmlChar = '';
-	htmlChar += '<div id="row_' + index + '" class="row ' + symbol + ' focusout">';
+	htmlChar += '<div id="row_' + index + '" class="my_row ' + symbol + ' focusout">';
 	htmlChar += ' <div class="my-indent" style="margin-left:' + indent + 'em;">';
 	htmlChar += '  <span class="my-mark ' + markIcon + '"></span>';
 	htmlChar += '  <div class="my-content char-font">' + content + '</div>';
