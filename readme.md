@@ -4,6 +4,12 @@
 http://dillinger.io/
 * 色使い
 https://web.any.do/
+* 色
+http://www.colordic.org/
+* アイコン(Bootstrap)
+http://www.totec-bs.co.jp/blog/bootsrtap-icon/
+* アイコン(Bootstrap)
+http://www.totec-bs.co.jp/blog/bootsrtap-icon/
 
 # マークの意味
 * □・・・未完了のタスク
@@ -32,4 +38,25 @@ https://web.any.do/
 ---
 
 # WANT
-* 他の要素への移動(アンカー)
+* タスク済の要素以下はたためるようにする。
+　⇒未or済タスクの以下が補足、注釈の場合
+
+* 他の要素への移動(タグ機能)
+```
+  □[test]タスク１
+   ■タスク１－１
+  □タスク２
+   ■タスク２－１テストに遷移したい ＃test
+
+```
+* URLをアンカーにする（別タブで開く）
+
+
+# POINT OUT
+* マークを全部青にするとちかちかする。
+　⇒基本黒で、済は色を変える。
+
+* 結論のマークはなんか違う
+　⇒以下が打倒
+　　・glyphicon-thumbs-up（こっちがしっくりくる）
+　　・glyphicon-flag

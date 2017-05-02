@@ -33,12 +33,28 @@ IndexController.prototype.initEvent = function() {
     controller.updateVisual();
 
     // 各コメントにトグルイベントを設定
-		$('.mark-comment .glyphicon').each(function(i){
-			var that = this;
-			$(that).on('click', function() {
-				$(that).parent().find('.my-content').slideToggle();
-			});
+	$('.mark-comment .glyphicon').each(function(i){
+		var that = this;
+		$(that).on('click', function() {
+			$(that).parent().find('.my-content').slideToggle();
 		});
+	});
+
+    // 各コメントにトグルイベントを設定
+	$('.row').each(function(i){
+		var that = this;
+		$(that).hover(
+			function() { // フォーカスオン
+				$(that).removeClass('focusout');
+				$(that).addClass('focusin');
+			},
+			function() { // フォーカスオフ
+				$(that).removeClass('focusin');
+				$(that).addClass('focusout');
+			}
+		);
+	});
+
   });
 }
 
@@ -110,7 +126,7 @@ IndexController.prototype.createTitleHtml = function(element) {
 	if(content == null) { return '<div class="row"><br /></div>'; }
 
 	var htmlChar = '';
-	htmlChar += '<div class="row">';
+	htmlChar += '<div class="row focusout">';
 	htmlChar += ' <div class="my-title">';
 	htmlChar += '  <div class="my-content">' + content + '</div>';
 	htmlChar += ' </div>';		
@@ -130,7 +146,7 @@ IndexController.prototype.createTaskHtml = function(element) {
 	var markIcon = 'glyphicon glyphicon-unchecked';
 
 	var htmlChar = '';
-	htmlChar += '<div class="row ' + symbol + '">';
+	htmlChar += '<div class="row ' + symbol + ' focusout">';
 	htmlChar += ' <div class="my-indent" style="margin-left:' + indent + 'em;">';
 	htmlChar += '  <span class="my-mark ' + markIcon + '"></span>';
 	htmlChar += '  <div class="my-content char-font">' + content + '</div>';
@@ -151,7 +167,7 @@ IndexController.prototype.createDoneHtml = function(element) {
 	var markIcon = 'glyphicon glyphicon-check';
 
 	var htmlChar = '';
-	htmlChar += '<div class="row ' + symbol + '">';
+	htmlChar += '<div class="row ' + symbol + ' focusout">';
 	htmlChar += ' <div class="my-indent" style="margin-left:' + indent + 'em;">';
 	htmlChar += '  <span class="my-mark ' + markIcon + '"></span>';
 	htmlChar += '  <div class="my-content char-font">' + content + '</div>';
@@ -172,7 +188,7 @@ IndexController.prototype.createSupplementHtml = function(element) {
 	var markIcon = 'glyphicon glyphicon-arrow-right';
 
 	var htmlChar = '';
-	htmlChar += '<div class="row ' + symbol + '">';
+	htmlChar += '<div class="row ' + symbol + ' focusout">';
 	htmlChar += ' <div class="my-indent" style="margin-left:' + indent + 'em;">';
 	htmlChar += '  <span class="my-mark ' + markIcon + '"></span>';
 	htmlChar += '  <div class="my-content char-font">' + content + '</div>';
@@ -193,7 +209,7 @@ IndexController.prototype.createCommentHtml = function(element) {
 	var markIcon = 'glyphicon glyphicon-chevron-down';
 
 	var htmlChar = '';
-	htmlChar += '<div class="row ' + symbol + '">';
+	htmlChar += '<div class="row ' + symbol + ' focusout">';
 	htmlChar += ' <div class="my-indent" style="margin-left:' + indent + 'em;">';
 	htmlChar += '  <span class="my-mark ' + markIcon + '"></span>';
 	htmlChar += '  <div class="my-content char-font">' + content + '</div>';
@@ -211,10 +227,10 @@ IndexController.prototype.createConclusionHtml = function(element) {
 	var content = element[IndexController.ELEMENT.CONTENT];
 
 	var symbol = 'mark-conclusion';
-	var markIcon = 'glyphicon glyphicon-exclamation-sign';
+	var markIcon = 'glyphicon glyphicon-thumbs-up';
 
 	var htmlChar = '';
-	htmlChar += '<div class="row ' + symbol + '">';
+	htmlChar += '<div class="row ' + symbol + ' focusout">';
 	htmlChar += ' <div class="my-indent" style="margin-left:' + indent + 'em;">';
 	htmlChar += '  <span class="my-mark ' + markIcon + '"></span>';
 	htmlChar += '  <div class="my-content char-font">' + content + '</div>';
