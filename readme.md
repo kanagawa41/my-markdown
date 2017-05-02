@@ -25,6 +25,7 @@ http://www.totec-bs.co.jp/blog/bootsrtap-icon/
 　□１－１
 　　■１－１ー１
 　　　※注釈１－１ー１－１
+　　□１－１
 
 
 タイトル２
@@ -35,6 +36,13 @@ http://www.totec-bs.co.jp/blog/bootsrtap-icon/
 　　　※注釈２－１－１－２
 　■２－２
 　　⇒結論１
+
+タイトル３
+■３
+　→補足３－１
+　　※注釈３－１－１
+□３.2
+　→補足３.2－１
 ---
 
 # WANT
