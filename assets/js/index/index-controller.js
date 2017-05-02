@@ -59,6 +59,28 @@ IndexController.prototype.initEvent = function() {
         }
 	});
 
+
+	// ヴィジュアルエリアの拡大
+	$('.glyphicon-resize-full').on('click', function() {
+		if($('#visual-title-wrapper').hasClass('full')){
+			var windowWidth = $(window).width();
+			var partsWidth = windowWidth / 2;
+			$('#visual-title-wrapper').width(partsWidth);
+			$('#visual-area').width(partsWidth);
+			$('#visual-title-wrapper').removeClass('full');
+		} else {
+			$('#visual-title-wrapper').width($(window).width());
+			$('#visual-area').width($(window).width());
+			$('#visual-title-wrapper').addClass('full');
+		}
+
+		$('#making-title-wrapper').toggle();
+		$('#making-area').toggle();
+
+	    controller.updateVisual();
+	    controller.setEventAfterDraw();
+	});
+
 /*
     // 各コメントにトグルイベントを設定
 	$('.mark-comment .glyphicon').each(function(i){
@@ -70,7 +92,6 @@ IndexController.prototype.initEvent = function() {
 */
 
 }
-
 
 /**
  * 要素が書き出された後のイベントの設定
@@ -124,26 +145,32 @@ IndexController.prototype.setEventAfterDraw = function() {
 			}
 		);
 	});
+
+    // sidebarとmainの各行の高さを取得して高さを合わせる。
+	$('#main-area .my_row').each(function(i){
+		var that = this;
+		$('#sidebar-area #row_' + i).height($(this).height());
+	});
 }
 
 /**
  * ビジュアル更新処理
  */
 IndexController.prototype.updateVisual = function() {
-  // 初期化に気を付ける
-  $('#visual-area').html('<div id="sidebar-area"></div><div id="main-area"></div>');
+	// 初期化に気を付ける
+	$('#visual-area').html('<div id="sidebar-area"></div><div id="main-area"></div>');
 
-  var content = $('#making-area #content').val();
-  if(!content) { return; }
+	var content = $('#making-area #content').val();
+	if(!content) { return; }
 
-  var elements = this.charAnalysis(content);
+	var elements = this.charAnalysis(content);
 
-  var elementSideBarHtml = this.constructSidebarHtml(elements);
+	var elementSideBarHtml = this.constructSidebarHtml(elements);
 
-  var elementMainHtml = this.constructMainHtml(elements);
+	var elementMainHtml = this.constructMainHtml(elements);
 
-  $('#sidebar-area').append(elementSideBarHtml);
-  $('#main-area').append(elementMainHtml);
+	$('#sidebar-area').append(elementSideBarHtml);
+	$('#main-area').append(elementMainHtml);
 }
 
 /**
@@ -231,12 +258,24 @@ IndexController.prototype.createTitleHtml = function(element) {
 	var indent = element[IndexController.ELEMENT.INDENT];
 	var content = element[IndexController.ELEMENT.CONTENT];
 
-	if(content == null) { return '<div id="row_' + index + '" class="my_row"><br /></div>'; }
+	if(content == null) { 
+		var htmlChar = '';
+
+		htmlChar += '<div id="row_' + index + '" class="my_row focusout">';
+		// htmlChar += ' <div class="my-indent" style="margin-left:' + indent + 'em;">';
+		htmlChar += '  <span class="my-mark"></span>';
+		htmlChar += '  <div class="my-content char-font">&nbsp;</div>';
+		htmlChar += ' </div>';		
+		htmlChar += '</div>';		
+
+		return htmlChar;
+	}
 
 	var htmlChar = '';
 	htmlChar += '<div id="row_' + index + '" class="my_row focusout">';
-	htmlChar += ' <div class="my-title">';
-	htmlChar += '  <div class="my-content">' + content + '</div>';
+	// htmlChar += ' <div class="my-indent" style="margin-left:' + indent + 'em;">';
+	htmlChar += '  <div class="my-title">';
+	htmlChar += '  <div class="my-content char-font">' + content + '</div>';
 	htmlChar += ' </div>';		
 	htmlChar += '</div>';		
 
