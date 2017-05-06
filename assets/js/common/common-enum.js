@@ -4,6 +4,7 @@ var Enum = {
 	CONFIG: {
 	 // INDENT_WIDTH : 10, ←em単位で設定するため
 	 INDENT_MARK : "　",
+	 STORE_KEY : "LAST_WRITE_DOCUMENT",
 	},
 
 	MARK: {

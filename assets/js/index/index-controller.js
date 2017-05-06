@@ -6,6 +6,12 @@ var IndexController = function() {
     if(!(this instanceof IndexController)) {
         return new IndexController();
     }
+
+    var lastDocument = store.get(Enum.CONFIG.INDENT_MARK);
+console.log(lastDocument);
+    if(lastDocument){
+    	$('#making-area #content').val(lastDocument);
+    }
 }
 
 /**
@@ -23,8 +29,13 @@ IndexController.ELEMENT = {
  * 初期処理
  */
 IndexController.prototype.init = function() {
-  this.initEvent();
-  this.initVisual();
+	this.initEvent();
+	this.initVisual();
+
+	// 前回の値を表示するようにしたので初期化処理を行う
+	this.updateVisual();
+	this.setEventAfterDraw();
+
 }
 
 /**
@@ -49,19 +60,24 @@ IndexController.prototype.initVisual = function() {
  */
 IndexController.prototype.initEvent = function() {
 	var controller = this;
+
+	// コンテンツの入力イベント
 	var contentOld = "";
 	var keyUptimer = false;
  	$('#making-area #content').keyup(function(e) {
+	    $('#main #description').text('In the input...');
 	    if (keyUptimer !== false) {
 	        clearTimeout(keyUptimer);
 	    }
 	    keyUptimer = setTimeout(function() {
-	    	console.log('keyup');
 		    var contentNew = $('#making-area #content').val();
 	        if(contentNew != contentOld){
 	            contentOld = contentNew;
 			    controller.updateVisual();
 			    controller.setEventAfterDraw();
+
+			    $('#main #description').text('Saved!');
+			    store.set(Enum.CONFIG.INDENT_MARK, contentNew);
 	        }
 	    }, 500); // 値を変更すると反映の間隔を変更できる
 	});

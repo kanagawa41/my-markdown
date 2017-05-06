@@ -29,12 +29,12 @@
       <!-- Main -->
       <div id="main-wrapper">
         <div id="main">
-          <div id="description">
-          記号一覧：　□ 未完了タスク　■ 完了タスク　→ 補足　※ 注釈　⇒ 結論
+          <div id="description" class="text-center">
+            Show state
           </div>
           <div id="area-title">
             <div id="making-title-wrapper">
-              <div id="title">RAW MARK</div>
+              <div id="title">RAW MARK　<span class="full-size-mark glyphicon glyphicon-question-sign" onclick="$('#simbol-list-modal').modal('show');"></span></div>
             </div>
             <div id="visual-title-wrapper">
               <div id="title">PREVIEW<span class="full-size-mark glyphicon glyphicon-resize-full pull-right"></span></div>
@@ -59,15 +59,19 @@
  -->
     </div>
     <!--　サンプルポップアップ　-->
-    <div class="modal fade" id="sample-modal" tabindex="-1" role="dialog">
+    <div class="modal fade" id="simbol-list-modal" tabindex="-1" role="dialog">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-            <h4 class="modal-title"><span class="glyphicon glyphicon glyphicon-info-sign" aria-hidden="true"></span>サンプルモーダル</h4>
+            <h4 class="modal-title"><span class="glyphicon glyphicon glyphicon-question-sign" aria-hidden="true"></span>記号一覧</h4>
           </div>
           <div class="modal-body on-scroll">
-            サンプルモーダル
+            □　…　未完了タスク<br />
+            ■　…　完了タスク<br />
+            →　…　補足<br />
+            ※　…　注釈<br />
+            ⇒　…　結論
           </div>
         </div>
       </div>
@@ -79,6 +83,7 @@
     <script type="text/javascript" src="assets/js/common/my-common.js"></script>
     <script type="text/javascript" src="assets/js/common/common-enum.js"></script>
     <script type="text/javascript" src="assets/js/index/index-controller.js"></script>
+    <script type="text/javascript" src="assets/js/store/store.min.js"></script>
     <script type="text/javascript">
       // AJAXのリクエストパラメータのひな形
       var getBasicAjaxRequest = function(){
