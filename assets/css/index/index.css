@@ -2,8 +2,8 @@
 #header {
     padding-left: 1rem;
     width: 100%;
-    height: 5rem;
-    line-height: 5rem;
+    height: 3rem;
+    line-height: 3rem;
     color: #09c; }
 
 #description {
@@ -25,7 +25,7 @@
             height: 3rem;
             border: solid 1px #E8E8E8; }
                 #area-title #making-title-wrapper #title a{
-                    color: #E8E8E8; }
+                    color: #c7c7c7; }
     #area-title #visual-title-wrapper {
         float:left;
         width: 50%; }
@@ -35,7 +35,7 @@
             height: 3rem;
             border: solid 1px #E8E8E8; }
                 #area-title #visual-title-wrapper #title a{
-                    color: #E8E8E8; }
+                    color: #c7c7c7; }
                 #area-title #visual-title-wrapper #title .full-size-mark{
                     color: #09c;
                     font-size: 2.8rem;
