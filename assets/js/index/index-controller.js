@@ -8,7 +8,6 @@ var IndexController = function() {
     }
 
     var lastDocument = store.get(Enum.CONFIG.INDENT_MARK);
-console.log(lastDocument);
     if(lastDocument){
     	$('#making-area #content').val(lastDocument);
     }

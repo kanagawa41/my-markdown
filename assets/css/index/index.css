@@ -119,6 +119,7 @@
 .mark-comment { 
     background-color: #fff; }
     .mark-comment .char-font {
+        font-size: 1rem;
         color: #000; }
     .mark-comment .my-content {
         /*background-color: #c7c7c7;*/
@@ -129,3 +130,11 @@
     .mark-conclusion .char-font {
         color: #ff0000;
         /*font-weight: bold;*/ }
+
+
+/**
+ * モーダルの設定
+ */
+.modal .modal-header {
+    color: #09c;
+}
