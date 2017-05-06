@@ -50,15 +50,21 @@ IndexController.prototype.initVisual = function() {
 IndexController.prototype.initEvent = function() {
 	var controller = this;
 	var contentOld = "";
+	var keyUptimer = false;
  	$('#making-area #content').keyup(function(e) {
-	    var contentNew = $('#making-area #content').val();
-        if(contentNew != contentOld){
-            contentOld = contentNew;
-		    controller.updateVisual();
-		    controller.setEventAfterDraw();
-        }
+	    if (keyUptimer !== false) {
+	        clearTimeout(keyUptimer);
+	    }
+	    keyUptimer = setTimeout(function() {
+	    	console.log('keyup');
+		    var contentNew = $('#making-area #content').val();
+	        if(contentNew != contentOld){
+	            contentOld = contentNew;
+			    controller.updateVisual();
+			    controller.setEventAfterDraw();
+	        }
+	    }, 500); // 値を変更すると反映の間隔を変更できる
 	});
-
 
 	// ヴィジュアルエリアの拡大
 	$('.glyphicon-resize-full').on('click', function() {
@@ -79,6 +85,17 @@ IndexController.prototype.initEvent = function() {
 
 	    controller.updateVisual();
 	    controller.setEventAfterDraw();
+	});
+
+	// 画面のリサイズイベント
+	var resizeTimer = false;
+	$(window).resize(function() {
+	    if (resizeTimer !== false) {
+	        clearTimeout(resizeTimer);
+	    }
+	    resizeTimer = setTimeout(function() {
+	    	controller.initVisual();
+	    }, 200);
 	});
 
 /*
@@ -474,7 +491,7 @@ IndexController.prototype.toElement = function(content) {
 	//記載内容
 	regexp = new RegExp('(?!\\s*[' + marks + ']).+$', 'g');
 	temp = content.match(regexp);
-	element[IndexController.ELEMENT.CONTENT] = temp != null ? temp[0] : null;
+	element[IndexController.ELEMENT.CONTENT] = temp != null ? myCommon.autoLink(temp[0], true) : null;
 
 	return element;
 }

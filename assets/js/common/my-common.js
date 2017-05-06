@@ -134,10 +134,14 @@ var myCommon = {
      * 文字列に対して、httpなどで始まる部分を抽出し、Aタグを張る。
      * https://www.bhnt.co.jp/blog/%E9%96%8B%E7%99%BA%E8%A8%80%E8%AA%9E/javascript/javascript-%E6%96%87%E5%AD%97%E5%88%97%E3%81%8B%E3%82%89url%E3%82%92%E6%8A%BD%E5%87%BA%E3%81%97a%E3%82%BF%E3%82%B0%E3%82%92%E5%BC%B5%E3%82%8B%E9%96%A2%E6%95%B0%E3%80%82/
      */
-    autoLink: function (str) {
+    autoLink: function (str, otherTabFlag) {
         var regexp_url = /((h?)(ttps?:\/\/[a-zA-Z0-9.\-_@:/~?%&;=+#',()*!]+))/g; // ']))/;
         var regexp_makeLink = function(all, url, h, href) {
-            return '<a href="h' + href + '">' + url + '</a>';
+            if(otherTabFlag){
+                return '<a href="h' + href + '" target="_blank">' + url + '</a>';
+            } else {
+                return '<a href="h' + href + '">' + url + '</a>';
+            }
         }
 
         return str.replace(regexp_url, regexp_makeLink);
