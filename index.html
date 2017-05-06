@@ -34,10 +34,10 @@
           </div>
           <div id="area-title">
             <div id="making-title-wrapper">
-              <div id="title">RAW MARK　<span class="full-size-mark glyphicon glyphicon-question-sign" onclick="$('#simbol-list-modal').modal('show');"></span></div>
+              <div id="title">RAW MARK　<a href="#" data-toggle="tooltip" title="使用できる記号は？"><span class="glyphicon glyphicon-question-sign" onclick="$('#simbol-list-modal').modal('show');"></span></a></div>
             </div>
             <div id="visual-title-wrapper">
-              <div id="title">PREVIEW<span class="full-size-mark glyphicon glyphicon-resize-full pull-right"></span></div>
+              <div id="title">PREVIEW　<a href="#" data-toggle="tooltip" title="全て展開する"><span class="glyphicon glyphicon-folder-open" onclick="indexController.openRow();"></span></a><span class="full-size-mark glyphicon glyphicon-resize-full pull-right"></span></div>
             </div>
           </div>
           <div id="making-area">
@@ -128,12 +128,13 @@
           console.log("errorThrown : " + errorThrown);
       };
 
+      var indexController;
+
       $(document).ready(function(){
-        var indexController = new IndexController();
+        indexController = new IndexController();
         indexController.init();
 
-        // モーダル表示
-        // $('#sample-modal').modal('show');
+        $('[data-toggle="tooltip"]').tooltip();
       });
 
       /**

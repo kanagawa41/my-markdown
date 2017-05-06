@@ -125,6 +125,28 @@ IndexController.prototype.initEvent = function() {
 
 }
 
+
+/**
+ * 非表示の列を表示状態にする。
+ */
+IndexController.prototype.openRow = function() {
+	$('#sidebar-area .my_row.toggle').each(function(i){
+		var that = this;
+		var targetRows = $(that).find('[name="target-row"]').val().split(',');
+
+		// 対象の列を表示にする
+		targetRows.forEach(function(rowNumber){
+			$('#sidebar-area #row_' + rowNumber).css('display', '');
+			$('#main-area #row_' + rowNumber).css('display', '');
+		});
+
+		$(that).find('.my-mark').removeClass('glyphicon-chevron-up');
+		$(that).find('.my-mark').addClass('glyphicon-chevron-down');
+		$(that).removeClass('fold');
+		$(that).addClass('open');
+	});
+}
+
 /**
  * 要素が書き出された後のイベントの設定
  */
@@ -159,6 +181,8 @@ IndexController.prototype.setEventAfterDraw = function() {
 				$(that).addClass('open');
 			}
 		});
+
+		// 初期状態は閉じた状態
 		$(that).addClass('open');
 		$(that).click();
 	});
