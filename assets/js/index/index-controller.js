@@ -528,9 +528,20 @@ IndexController.prototype.toElement = function(content) {
 	element[IndexController.ELEMENT.INDENT] = temp != null ? temp[0].length : 0;
 
 	//記載内容
-	regexp = new RegExp('(?!\\s*[' + marks + ']).+$', 'g');
-	temp = content.match(regexp);
-	element[IndexController.ELEMENT.CONTENT] = temp != null ? myCommon.autoLink(temp[0], true) : null;
+	element[IndexController.ELEMENT.CONTENT] = function(content){
+		regexp = new RegExp('(?!\\s+).+$', 'g');
+		temp = content.match(regexp);
+
+		if(temp == null) return null;
+
+		// FIXME: 空白と記号は含めないようにする正規表現を完成させる
+		// '(?!\\s+)(?![' + marks + ']).+$'
+		regexp = new RegExp('^[' + marks + ']', 'g');
+		temp = temp[0].replace(regexp, '');
+
+		return myCommon.autoLink(temp, true);
+	}(content);
+
 
 	return element;
 }
