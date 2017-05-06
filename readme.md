@@ -19,7 +19,7 @@ http://www.totec-bs.co.jp/blog/bootsrtap-icon/
 * ⇒・・・結論
 
 # テンプレ
----
+```
 タイトル１
 □１
 　□１－１
@@ -43,7 +43,7 @@ http://www.totec-bs.co.jp/blog/bootsrtap-icon/
 　　※注釈３－１－１
 □３.2
 　→補足３.2－１
----
+```
 
 # WANT
 * タスク済の要素以下はたためるようにする。

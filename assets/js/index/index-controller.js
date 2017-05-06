@@ -437,6 +437,12 @@ IndexController.prototype.charAnalysis = function(rawContent) {
 		i++;
 	});
 
+	if(doneChildren != null && doneChildren.length > 0){
+		var parentDoneElement = elements[doneIndent];
+		parentDoneElement[IndexController.ELEMENT.DONE_CHILDREN] = doneChildren;
+		elements[doneIndent] = parentDoneElement;
+	}
+
 	return elements;
 }
 
