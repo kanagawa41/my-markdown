@@ -84,6 +84,9 @@ IndexController.prototype.initEvent = function() {
     var contentOld = "";
     var keyUptimer = false;
     $('#making-area #content').keyup(function(e) {
+        // 方向キーは無視する。
+        if(e.keyCode >= 37 && e.keyCode <= 40) { return true; }
+
         $('#main #description').text('In the input...');
         if (keyUptimer !== false) {
             clearTimeout(keyUptimer);
@@ -97,6 +100,9 @@ IndexController.prototype.initEvent = function() {
 
                 $('#main #description').text('Saved!');
                 store.set(Enum.CONFIG.STORE_KEY, contentNew);
+            } else {
+                // 本当はセーブしていないが内容が変わらないので整合性はある。　
+                $('#main #description').text('Saved!');
             }
         }, 500); // 値を変更すると反映の間隔を変更できる
     });
@@ -132,17 +138,6 @@ IndexController.prototype.initEvent = function() {
             controller.initVisual();
         }, 200);
     });
-
-/*
-    // 各コメントにトグルイベントを設定
-    $('.mark-comment .glyphicon').each(function(i){
-        var that = this;
-        $(that).on('click', function() {
-            $(that).parent().find('.my-content').slideToggle();
-        });
-    });
-*/
-
 }
 
 
@@ -180,8 +175,13 @@ IndexController.prototype.setEventAfterDraw = function() {
             if($(that).hasClass('open')){ // 開いている状態
                 // 対象の列を非表示にする
                 targetRows.forEach(function(rowNumber){
-                    $('#sidebar-area #row_' + rowNumber).toggle();
-                    $('#main-area #row_' + rowNumber).toggle();
+                    // もし閉じる列がトグルを保持している場合は閉じる
+                    if($('#sidebar-area #row_' + rowNumber).hasClass('toggle') && $('#sidebar-area #row_' + rowNumber).hasClass('open')){
+                        $('#sidebar-area #row_' + rowNumber).click();
+                    }
+
+                    $('#sidebar-area #row_' + rowNumber).css('display', 'none');
+                    $('#main-area #row_' + rowNumber).css('display', 'none');
                 });
 
                 $(that).find('.my-mark').removeClass('glyphicon-chevron-down');
@@ -191,8 +191,8 @@ IndexController.prototype.setEventAfterDraw = function() {
             } else if($(that).hasClass('fold')){ // 閉じている状態
                 // 対象の列を表示にする
                 targetRows.forEach(function(rowNumber){
-                    $('#sidebar-area #row_' + rowNumber).toggle();
-                    $('#main-area #row_' + rowNumber).toggle();
+                    $('#sidebar-area #row_' + rowNumber).css('display', '');
+                    $('#main-area #row_' + rowNumber).css('display', '');
                 });
 
                 $(that).find('.my-mark').removeClass('glyphicon-chevron-up');
@@ -240,7 +240,7 @@ IndexController.prototype.updateVisual = function() {
     if(!content) { return; }
 
     var elements = this.charAnalysis(content);
-console.log(elements);
+
     var elementSideBarHtml = this.constructSidebarHtml(elements);
 
     var elementMainHtml = this.constructMainHtml(elements);

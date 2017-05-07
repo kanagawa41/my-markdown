@@ -46,8 +46,6 @@ http://www.totec-bs.co.jp/blog/bootsrtap-icon/
 ```
 
 # WANT
-* 要素に折り畳み機能
-
 * 他の要素への移動(タグ機能)
 ```
   □[test]タスク１
@@ -61,6 +59,8 @@ http://www.totec-bs.co.jp/blog/bootsrtap-icon/
 
 
 # DONE
+* 要素に折り畳み機能
+
 * 記号なしの場合は強制的にタイトルになっているが、段落がついてるものは通常の文字が出力されるようにする。
 
 * タスク済の要素以下はたためるようにする。
