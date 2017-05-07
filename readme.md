@@ -46,8 +46,7 @@ http://www.totec-bs.co.jp/blog/bootsrtap-icon/
 ```
 
 # WANT
-* タスク済の要素以下はたためるようにする。
-　⇒未or済タスクの以下が補足、注釈の場合
+* 要素に折り畳み機能
 
 * 他の要素への移動(タグ機能)
 ```
@@ -57,10 +56,16 @@ http://www.totec-bs.co.jp/blog/bootsrtap-icon/
    ■タスク２－１テストに遷移したい ＃test
 
 ```
-* URLをアンカーにする（別タブで開く）
-
 
 # POINT OUT
+
+
+# DONE
+* 記号なしの場合は強制的にタイトルになっているが、段落がついてるものは通常の文字が出力されるようにする。
+
+* タスク済の要素以下はたためるようにする。
+　⇒未or済タスクの以下が補足、注釈の場合
+
 * マークを全部青にするとちかちかする。
 　⇒基本黒で、済は色を変える。
 
@@ -68,3 +73,5 @@ http://www.totec-bs.co.jp/blog/bootsrtap-icon/
 　⇒以下が打倒
 　　・glyphicon-thumbs-up（こっちがしっくりくる）
 　　・glyphicon-flag
+
+* URLをアンカーにする（別タブで開く）

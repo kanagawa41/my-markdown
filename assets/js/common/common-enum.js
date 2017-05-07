@@ -14,4 +14,8 @@ var Enum = {
 	 COMMENT : "※",
 	 CONCLUSION : "⇒",
 	},
+
+	SPECIAL_MARK: {
+	 FOLD_AREA : "‘",
+	},
 }
