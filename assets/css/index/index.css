@@ -59,6 +59,7 @@
     font-family: Arial,"Helvetica Neue",Helvetica,sans-serif; }
 
 #main-area {
+    padding-top: 5px;
     width: 95%;
     float: left; }
     #main-area .my_row {
