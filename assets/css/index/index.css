@@ -143,3 +143,30 @@
 .modal .modal-header {
     color: #09c;
 }
+
+
+/* オーバーレイの実装 */
+/* [参考](http://coliss.com/articles/build-websites/operation/css/css-centering-in-the-unknown-by-css-tricks.html) */
+#overlay{
+    display: none;
+    width: 100%;
+    height:100%;
+    text-align: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 100;
+    background: rgba(255, 255, 255, 1); }
+    #overlay:before {
+        content: '';
+        display: inline-block;
+        height: 100%;
+        vertical-align: middle;
+        margin-right: -0.25em; }
+    #overlay .content{
+        font-size: 40px;
+        color: #09c;
+        font-weight: bold;
+        margin: auto;
+        display: inline-block;
+        vertical-align: middle; }

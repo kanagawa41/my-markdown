@@ -48,6 +48,9 @@ IndexController.FOLD_AREA_ELEMENT = {
  * 初期処理
  */
 IndexController.prototype.init = function() {
+    // 最初からレイヤーを出していても表示されない。
+    $("#overlay").fadeIn(400);
+
     this.initEvent();
     this.initVisual();
 
@@ -55,12 +58,14 @@ IndexController.prototype.init = function() {
     this.updateVisual();
     this.setEventAfterDraw();
 
+    // 最初からレイヤーを出していても表示されない。
+    $("#overlay").fadeOut(100);
 }
 
 /**
  * ビジュアルの設定
  */
-IndexController.prototype.initVisual = function() {
+IndexController.prototype.initVisual = function() {    
     var windowWidth = $(window).width();
     var partsWidth = windowWidth / 2;
     $('#making-area').width(partsWidth);
