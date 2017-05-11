@@ -54,6 +54,10 @@ http://www.totec-bs.co.jp/blog/bootsrtap-icon/
    ■タスク２－１テストに遷移したい ＃test
 
 ```
+# TODO
+* TODO記号が□■だと「しかく」と打って変換するので入力に時間がかかる
+　→＋、－で表現する？
+　　→スペースを入力して＋、－を打つと半角になったりならなかったりする
 
 # POINT OUT
 
