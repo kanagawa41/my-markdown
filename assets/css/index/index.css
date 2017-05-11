@@ -148,7 +148,6 @@
 /* オーバーレイの実装 */
 /* [参考](http://coliss.com/articles/build-websites/operation/css/css-centering-in-the-unknown-by-css-tricks.html) */
 #overlay{
-    display: none;
     width: 100%;
     height:100%;
     text-align: center;
