@@ -58,6 +58,11 @@ IndexController.prototype.init = function() {
  * ビジュアルの設定
  */
 IndexController.prototype.initVisual = function() {    
+    this.partsWidth = $(window).width() / 2;
+    this.windowHeight = $(window).height()
+        - $('#header').height()
+        - $('#making-title-wrapper').height();
+
     this.resize();
 
     this.editor = ace.edit("ace_editor");
@@ -81,17 +86,12 @@ IndexController.prototype.initVisual = function() {
 }
 
 IndexController.prototype.resize = function() {
-    var windowWidth = $(window).width();
-    var partsWidth = windowWidth / 2;
-    $('#making-area').width(partsWidth);
-    $('#visual-area').width(partsWidth - 1); // ボーダー線の調整分
+    $('#making-area').width(this.partsWidth);
+    $('#visual-area').width(this.partsWidth - 1); // ボーダー線の調整分
 
     // 高さに影響を与える要素ができた場合、それを引くようにする
-    var windowHeight = $(window).height()
-        - $('#header').height()
-        - $('#making-title-wrapper').height();
-    $('#making-area #ace_editor').height(windowHeight);
-    $('#visual-area').height(windowHeight);
+    $('#making-area #ace_editor').height(this.windowHeight);
+    $('#visual-area').height(this.windowHeight);
 }
 
 /**
@@ -127,10 +127,8 @@ IndexController.prototype.initEvent = function() {
     // ヴィジュアルエリアの拡大
     $('.glyphicon-resize-full').on('click', function() {
         if($('#visual-title-wrapper').hasClass('full')){
-            var windowWidth = $(window).width();
-            var partsWidth = windowWidth / 2;
-            $('#visual-title-wrapper').width(partsWidth);
-            $('#visual-area').width(partsWidth);
+            $('#visual-title-wrapper').width(controller.partsWidth);
+            $('#visual-area').width(controller.partsWidth - 1); // ボーダー線の調整分
             $('#visual-title-wrapper').removeClass('full');
         } else {
             $('#visual-title-wrapper').width($(window).width());
