@@ -62,7 +62,7 @@ IndexController.prototype.initVisual = function() {
 
     this.editor = ace.edit("ace_editor");
     this.editor.setFontSize(14);
-    this.editor.resize(true);
+    // this.editor.resize(true);
     this.editor.getSession().setUseWrapMode(true);
     this.editor.getSession().setTabSize(4);
     this.editor.$blockScrolling = Infinity;
@@ -72,6 +72,12 @@ IndexController.prototype.initVisual = function() {
     if(lastDocument){
         this.editor.setValue(lastDocument);
     }
+
+    // 値を入れることにより選択状態になるため解除
+    this.editor.gotoLine(0, 0, true);
+    this.editor.selection.moveCursorRight();
+    this.editor.selection.moveCursorLeft();
+    this.editor.focus();
 }
 
 IndexController.prototype.resize = function() {
@@ -238,10 +244,10 @@ IndexController.prototype.setEventAfterDraw = function() {
             // 対象の列にカーソルをあてる
             var row = $(that).attr("id").replace('row_', '');
             controller.editor.gotoLine((parseInt(row) + 1), 0, true);
-            controller.editor.focus();
             // エディタで文字を入力するとエラーが発生するため下記のメソッドでリセット？をして解消している
-            controller.editor.selection.moveCursorLeft();
             controller.editor.selection.moveCursorRight();
+            controller.editor.selection.moveCursorLeft();
+            controller.editor.focus();
         });
     });
 
