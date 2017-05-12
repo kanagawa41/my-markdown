@@ -10,6 +10,8 @@ http://www.colordic.org/
 http://www.totec-bs.co.jp/blog/bootsrtap-icon/
 * アイコン(Bootstrap)
 http://www.totec-bs.co.jp/blog/bootsrtap-icon/
+* ACEエディタ
+https://ace.c9.io/
 
 # マークの意味
 * □・・・未完了のタスク

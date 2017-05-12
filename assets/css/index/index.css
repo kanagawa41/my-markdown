@@ -44,13 +44,13 @@
 /* 記載部 */
 #making-area {
     float:left; }
-    #making-area #content.form-control{
+/*    #making-area #ace_editor{
         overflow-x: scroll;
         overflow-y: scroll;
         font-size: 1.5rem;
         height: 100%;
         width: 100%; }
-
+*/
 #visual-area {
     float:left;
     padding-top: 5px;

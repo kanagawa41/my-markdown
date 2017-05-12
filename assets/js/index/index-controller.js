@@ -6,11 +6,6 @@ var IndexController = function() {
     if(!(this instanceof IndexController)) {
         return new IndexController();
     }
-
-    var lastDocument = store.get(Enum.CONFIG.STORE_KEY);
-    if(lastDocument){
-        $('#making-area #content').val(lastDocument);
-    }
 }
 
 /**
@@ -48,8 +43,8 @@ IndexController.FOLD_AREA_ELEMENT = {
  * 初期処理
  */
 IndexController.prototype.init = function() {
-    this.initEvent();
     this.initVisual();
+    this.initEvent();
 
     // 前回の値を表示するようにしたので初期化処理を行う
     this.updateVisual();
@@ -63,6 +58,22 @@ IndexController.prototype.init = function() {
  * ビジュアルの設定
  */
 IndexController.prototype.initVisual = function() {    
+    this.resize();
+
+    this.editor = ace.edit("ace_editor");
+    // editor.setFontSize(14);
+    // editor.getSession().setMode("ace/mode/html");
+    this.editor.getSession().setUseWrapMode(true);
+    this.editor.getSession().setTabSize(4);
+    this.editor.$blockScrolling = Infinity;
+
+    var lastDocument = store.get(Enum.CONFIG.STORE_KEY);
+    if(lastDocument){
+        this.editor.setValue(lastDocument);
+    }
+}
+
+IndexController.prototype.resize = function() {
     var windowWidth = $(window).width();
     var partsWidth = windowWidth / 2;
     $('#making-area').width(partsWidth);
@@ -72,7 +83,7 @@ IndexController.prototype.initVisual = function() {
     var windowHeight = $(window).height()
         - $('#header').height()
         - $('#making-title-wrapper').height();
-    $('#making-area').height(windowHeight);
+    $('#making-area #ace_editor').height(windowHeight);
     $('#visual-area').height(windowHeight);
 }
 
@@ -85,16 +96,13 @@ IndexController.prototype.initEvent = function() {
     // コンテンツの入力イベント
     var contentOld = "";
     var keyUptimer = false;
-    $('#making-area #content').keyup(function(e) {
-        // 方向キーは無視する。
-        if(e.keyCode >= 37 && e.keyCode <= 40) { return true; }
-
+    this.editor.session.on('change', function(){
         $('#main #description').text('In the input...');
         if (keyUptimer !== false) {
             clearTimeout(keyUptimer);
         }
         keyUptimer = setTimeout(function() {
-            var contentNew = $('#making-area #content').val();
+            var contentNew = controller.editor.getValue();
             if(contentNew != contentOld){
                 contentOld = contentNew;
                 controller.updateVisual();
@@ -137,7 +145,7 @@ IndexController.prototype.initEvent = function() {
             clearTimeout(resizeTimer);
         }
         resizeTimer = setTimeout(function() {
-            controller.initVisual();
+            controller.resize();
         }, 200);
     });
 }
@@ -238,7 +246,7 @@ IndexController.prototype.updateVisual = function() {
     // 初期化に気を付ける
     $('#visual-area').html('<div id="sidebar-area"></div><div id="main-area"></div>');
 
-    var content = $('#making-area #content').val();
+    var content = this.editor.getValue();
     if(!content) { return; }
 
     var elements = this.charAnalysis(content);

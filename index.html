@@ -11,7 +11,8 @@
   <link rel="stylesheet" type="text/css" href="assets/css/common/reset.css">
   <link rel="stylesheet" type="text/css" href="assets/css/common/setting.css">
   <link rel="stylesheet" type="text/css" href="assets/css/index/index.css">
-  <link rel="stylesheet" type="text/css" href="assets/css/bootstrap-v3-3-7/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="assets/vandor/bootstrap-v3-3-7/css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="assets/vandor/ace/css/ace_ime_jp_font.css">
 </head>
   <body>
     <div id="page-wrapper">
@@ -41,7 +42,8 @@
             </div>
           </div>
           <div id="making-area">
-            <textarea id="content" class="form-control input-xs"></textarea>
+            <!-- <textarea id="content" class="form-control input-xs"></textarea> -->
+            <div id="ace_editor" style="height: 600px"></div>
           </div>
           <div id="visual-area">
             <div id="sidebar-area">
@@ -99,11 +101,12 @@
 
     <!-- Scripts -->
     <script type="text/javascript" src="assets/js/common/jquery-3.2.1.min.js"></script>
-    <script type="text/javascript" src="assets/js/bootstrap-v3-3-7/bootstrap.min.js"></script>
     <script type="text/javascript" src="assets/js/common/my-common.js"></script>
     <script type="text/javascript" src="assets/js/common/common-enum.js"></script>
     <script type="text/javascript" src="assets/js/index/index-controller.js"></script>
-    <script type="text/javascript" src="assets/js/store/store.min.js"></script>
+    <script type="text/javascript" src="assets/vandor/bootstrap-v3-3-7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="assets/vandor/store/js/store.min.js"></script>
+    <script type="text/javascript" src="assets/vandor/ace/js/ace.js"></script>
 
     <script type="text/javascript">
       // AJAXのリクエストパラメータのひな形
