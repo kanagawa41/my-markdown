@@ -101,7 +101,7 @@ IndexController.prototype.initEvent = function() {
     var controller = this;
 
     // コンテンツの入力イベント
-    var contentOld = "";
+    var contentOld = null;
     var keyUptimer = false;
     this.editor.session.on('change', function(){
         $('#main #description').text('In the input...');
@@ -119,9 +119,9 @@ IndexController.prototype.initEvent = function() {
                 store.set(Enum.CONFIG.STORE_KEY, contentNew);
             } else {
                 // 本当はセーブしていないが内容が変わらないので整合性はある。　
-                $('#main #description').text('Saved!');
+                $('#main #description').text('Saved!!');
             }
-        }, 500); // 値を変更すると反映の間隔を変更できる
+        }, 1000); // 値を変更すると反映の間隔を変更できる
     });
 
     // ヴィジュアルエリアの拡大
