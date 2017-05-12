@@ -279,7 +279,9 @@ IndexController.prototype.constructSidebarHtml = function(elements) {
     var mainHtml = '';
 
     for(var key in elements){
-        mainHtml += this.toSidebarHtml(elements[key]);
+        if(elements[key] != null){
+            mainHtml += this.toSidebarHtml(elements[key]);
+        }
     }
 
     return mainHtml;
@@ -328,7 +330,9 @@ IndexController.prototype.constructMainHtml = function(elements) {
     var mainHtml = '';
 
     for(var key in elements){
-        mainHtml += this.toMainHtml(elements[key]);
+        if(elements[key] != null){
+            mainHtml += this.toMainHtml(elements[key]);
+        }
     }
 
     return mainHtml;
@@ -565,6 +569,7 @@ IndexController.prototype.charAnalysis = function(rawContent) {
     var controller = this;
 
     var i = 0;
+    var rowNumber = 0;
     var elements = [];
     var doneIndent = null;
     var doneChildren = null;
@@ -602,7 +607,10 @@ IndexController.prototype.charAnalysis = function(rawContent) {
                 foldIndent = null;
                 foldAreas = null;
 
-                // 列をなかったことにする
+                // 空行を設定
+                elements.push(null);
+                i++;
+
                 return true;
             } else {
                 foldAreas.push(i);
@@ -624,7 +632,10 @@ IndexController.prototype.charAnalysis = function(rawContent) {
             foldAreas = [];
             foldIndent = i - 1;
 
-            // 列をなかったことにする
+            // 空行を設定
+            elements.push(null);
+            i++;
+
             return true;
         }
 
