@@ -61,11 +61,12 @@ IndexController.prototype.initVisual = function() {
     this.resize();
 
     this.editor = ace.edit("ace_editor");
-    // editor.setFontSize(14);
-    // editor.getSession().setMode("ace/mode/html");
+    this.editor.setFontSize(14);
+    this.editor.resize(true);
     this.editor.getSession().setUseWrapMode(true);
     this.editor.getSession().setTabSize(4);
     this.editor.$blockScrolling = Infinity;
+    this.Range = ace.require('ace/range').Range;
 
     var lastDocument = store.get(Enum.CONFIG.STORE_KEY);
     if(lastDocument){
@@ -77,7 +78,7 @@ IndexController.prototype.resize = function() {
     var windowWidth = $(window).width();
     var partsWidth = windowWidth / 2;
     $('#making-area').width(partsWidth);
-    $('#visual-area').width(partsWidth);
+    $('#visual-area').width(partsWidth - 1); // ボーダー線の調整分
 
     // 高さに影響を与える要素ができた場合、それを引くようにする
     var windowHeight = $(window).height()
@@ -176,6 +177,7 @@ IndexController.prototype.openRow = function() {
  * 要素が書き出された後のイベントの設定
  */
 IndexController.prototype.setEventAfterDraw = function() {
+    var controller = this;
     // 済タスクの折り畳み機能を設定
     $('#sidebar-area .my_row.toggle').each(function(i){
         var that = this;
@@ -230,6 +232,17 @@ IndexController.prototype.setEventAfterDraw = function() {
                 $(that).addClass('focusout');
             }
         );
+
+        // ダブルクリック
+        $(that).dblclick(function () {
+            // 対象の列にカーソルをあてる
+            var row = $(that).attr("id").replace('row_', '');
+            controller.editor.gotoLine((parseInt(row) + 1), 0, true);
+            controller.editor.focus();
+            // エディタで文字を入力するとエラーが発生するため下記のメソッドでリセット？をして解消している
+            controller.editor.selection.moveCursorLeft();
+            controller.editor.selection.moveCursorRight();
+        });
     });
 
     // sidebarとmainの各行の高さを取得して高さを合わせる。

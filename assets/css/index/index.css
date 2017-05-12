@@ -44,20 +44,17 @@
 /* 記載部 */
 #making-area {
     float:left; }
-/*    #making-area #ace_editor{
-        overflow-x: scroll;
-        overflow-y: scroll;
-        font-size: 1.5rem;
-        height: 100%;
-        width: 100%; }
-*/
+
 #visual-area {
     float:left;
     padding-top: 5px;
     overflow: scroll;
-    overflow-x: scroll;
     overflow-y: scroll;
-    font-family: Arial,"Helvetica Neue",Helvetica,sans-serif; }
+    font-family: Arial,"Helvetica Neue",Helvetica,sans-serif; 
+    border-left-width: 1px;
+    border-style: solid;
+    border-color: #E8E8E8;
+    }
 
 #main-area {
     width: 95%;
