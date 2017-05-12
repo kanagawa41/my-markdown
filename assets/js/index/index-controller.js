@@ -69,7 +69,7 @@ IndexController.prototype.initVisual = function() {
     this.editor.setFontSize(14);
     // this.editor.resize(true);
     this.editor.getSession().setUseWrapMode(true);
-    this.editor.getSession().setTabSize(4);
+    // this.editor.getSession().setTabSize(4);
     this.editor.$blockScrolling = Infinity;
     this.Range = ace.require('ace/range').Range;
 
