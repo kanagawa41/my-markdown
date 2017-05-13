@@ -73,9 +73,21 @@ IndexController.prototype.initVisual = function() {
     this.editor.$blockScrolling = Infinity;
     this.Range = ace.require('ace/range').Range;
 
-    var lastDocument = store.get(Enum.CONFIG.STORE_KEY);
+    var lastDocument = store.get(Enum.CONFIG.STOREKEY_DOCUMENT);
     if(lastDocument){
         this.editor.setValue(lastDocument);
+    }
+
+    var variables = store.get(Enum.CONFIG.STOREKEY_VARIABLE);
+    if(variables){
+        $('#variables-modal .row-var').each(function(i, content){
+            var variable = variables[i];
+            $(this).find('[name="variable-name"]').val(variable['variable-name']);
+            $(this).find('[name="variable-value"]').val(variable['variable-value']);
+            $(this).find('[name="variable-supplement"]').val(variable['variable-supplement']);
+        });
+    } else {
+        this.saveVaiable(); // 初期化
     }
 
     // 値を入れることにより選択状態になるため解除
@@ -116,7 +128,9 @@ IndexController.prototype.initEvent = function() {
                 controller.setEventAfterDraw();
 
                 $('#main #description').text('Saved!');
-                store.set(Enum.CONFIG.STORE_KEY, contentNew);
+
+                store.remove(Enum.CONFIG.STOREKEY_DOCUMENT);
+                store.set(Enum.CONFIG.STOREKEY_DOCUMENT, contentNew);
             } else {
                 // 本当はセーブしていないが内容が変わらないので整合性はある。　
                 $('#main #description').text('Saved!!');
@@ -155,6 +169,22 @@ IndexController.prototype.initEvent = function() {
     });
 }
 
+/**
+ * メインHTML変換
+ */
+IndexController.prototype.saveVaiable = function() {
+    var datas = [];
+    $('#variables-modal .row-var').each(function(i, content){
+        var variable = {};
+        variable['variable-name'] = $(this).find('[name="variable-name"]').val();
+        variable['variable-value'] = $(this).find('[name="variable-value"]').val();
+        variable['variable-supplement'] = $(this).find('[name="variable-supplement"]').val();
+        datas.push(variable);
+    });
+
+    store.remove(Enum.CONFIG.STOREKEY_VARIABLE);
+    store.set(Enum.CONFIG.STOREKEY_VARIABLE, datas);
+}
 
 /**
  * 非表示の列を表示状態にする。
@@ -579,8 +609,9 @@ IndexController.prototype.charAnalysis = function(rawContent) {
     var doneChildren = null;
     var foldIndent = null;
     var foldAreas = null;
+    var variables = store.get(Enum.CONFIG.STOREKEY_VARIABLE);
     contents.forEach(function(content){
-        var element = controller.toElement(content);
+        var element = controller.toElement(content, variables);
 
         element[IndexController.ELEMENT.INDEX] = i;
 
@@ -659,7 +690,7 @@ IndexController.prototype.charAnalysis = function(rawContent) {
 /**
  * 一列の情報を要素オブジェクトに変換する。
  */
-IndexController.prototype.toElement = function(content) {
+IndexController.prototype.toElement = function(content, variables) {
     var element = [];
 
     // 対象のマークを文字列としてまとめる
@@ -702,7 +733,7 @@ IndexController.prototype.toElement = function(content) {
     //記載内容
     element[IndexController.ELEMENT.CONTENT] = function(content){
         regexp = new RegExp('(?!\\s+).+$', 'g');
-        temp = content.match(regexp);
+        var temp = content.match(regexp);
 
         if(temp == null) return null;
 
@@ -713,7 +744,46 @@ IndexController.prototype.toElement = function(content) {
         regexp = new RegExp('^[' + Enum.SPECIAL_MARK.FOLDAREA + ']', 'g');
         temp = temp.replace(regexp, '');
 
-        return myCommon.autoLink(temp, true);
+        regexp = new RegExp('｛｛.+｝｝', 'g');
+        // 変数があるか確認
+        var valiableName = temp.match(regexp);
+        if(valiableName != null) {
+            // 変数の展開
+            temp = function(content){
+                variables.forEach(function(variable) {
+                    var value = variable['variable-name'] == valiableName[0].replace(/[｛｝]/g, '') ? variable['variable-value'] : null;
+                    if(value == null) { return true; }
+                    content = content.replace(valiableName, value);
+                });
+                return content;
+            }(temp);
+        }
+
+        /**
+         * 特別指定のURLをアンカーに変換する
+         */
+        temp = function(content) {
+            var regexp_url = /「(.+)」（((?:h?)(ttps?:\/\/[a-zA-Z0-9.\-_@:/~?%&;=+#',*!]+))）/g;
+            var regexp_makeLink = function(all, text, url, href) {
+                return '<a href="h' + href + '" target="_blank">' + text + '</a>';
+            }
+
+            return content.replace(regexp_url, regexp_makeLink);
+        }(temp);
+
+        /**
+         * 通常のURLをアンカーに変換する
+         */
+        temp = function(content) {
+            var regexp_url = /\s+((?:h?)(ttps?:\/\/[a-zA-Z0-9.\-_@:/~?%&;=+#',*!]+))/g;
+            var regexp_makeLink = function(all, url, href) {
+                return '<a href="h' + href + '" target="_blank">' + url + '</a>';
+            }
+
+            return content.replace(regexp_url, regexp_makeLink);
+        }(temp);
+
+        return temp;
     }(content);
 
     //生の記載内容

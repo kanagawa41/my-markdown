@@ -19,24 +19,24 @@
     #area-title #making-title-wrapper {
         float:left;
         width: 50%; } 
-            #area-title #making-title-wrapper #title {
+            #area-title #making-title-wrapper .title {
             padding-left: 1rem;
             line-height: 3rem;
             height: 3rem;
             border: solid 1px #E8E8E8; }
-                #area-title #making-title-wrapper #title a{
+                #area-title #making-title-wrapper .title a{
                     color: #c7c7c7; }
     #area-title #visual-title-wrapper {
         float:left;
         width: 50%; }
-            #area-title #visual-title-wrapper #title {
+            #area-title #visual-title-wrapper .title {
             padding-left: 1rem;
             line-height: 3rem;
             height: 3rem;
             border: solid 1px #E8E8E8; }
-                #area-title #visual-title-wrapper #title a{
+                #area-title #visual-title-wrapper .title a{
                     color: #c7c7c7; }
-                #area-title #visual-title-wrapper #title .full-size-mark{
+                #area-title #visual-title-wrapper .title .full-size-mark{
                     color: #09c;
                     font-size: 2.8rem;
                     cursor: pointer; }
@@ -141,6 +141,10 @@
     color: #09c;
 }
 
+#variables-modal table tr td {
+    border: solid 1px #E8E8E8; }
+    #variables-modal table tr.row-var td {
+        text-align: right; }
 
 /* オーバーレイの実装 */
 /* [参考](http://coliss.com/articles/build-websites/operation/css/css-centering-in-the-unknown-by-css-tricks.html) */

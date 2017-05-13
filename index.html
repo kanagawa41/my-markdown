@@ -35,10 +35,13 @@
           </div>
           <div id="area-title">
             <div id="making-title-wrapper">
-              <div id="title">RAW MARK　<a href="#" data-toggle="tooltip" title="使用できる記号は？"><span class="glyphicon glyphicon-question-sign" onclick="$('#simbol-list-modal').modal('show');"></span></a></div>
+              <div class="title">RAW MARK　
+              <a href="#" data-toggle="tooltip" title="使用できる記号は？"><span class="glyphicon glyphicon-question-sign" onclick="$('#simbol-list-modal').modal('show');"></span></a>　
+              <a href="#" data-toggle="tooltip" title="変数"><span class="glyphicon glyphicon glyphicon-usd" onclick="$('#variables-modal').modal('show');"></span></a>
+              </div>
             </div>
             <div id="visual-title-wrapper">
-              <div id="title">PREVIEW　<a href="#" data-toggle="tooltip" title="全て展開する"><span class="glyphicon glyphicon-folder-open" onclick="indexController.openRow();"></span></a><span class="full-size-mark glyphicon glyphicon-resize-full pull-right"></span></div>
+              <div class="title">PREVIEW　<a href="#" data-toggle="tooltip" title="全て展開する"><span class="glyphicon glyphicon-folder-open" onclick="indexController.openRow();"></span></a><span class="full-size-mark glyphicon glyphicon-resize-full pull-right"></span></div>
             </div>
           </div>
           <div id="making-area">
@@ -66,7 +69,7 @@
         <div class="modal-content">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-            <h4 class="modal-title"><span class="glyphicon glyphicon glyphicon-question-sign" aria-hidden="true"></span>　記号一覧</h4>
+            <h4 class="modal-title"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>　記号一覧</h4>
           </div>
           <div class="modal-body on-scroll">
             <table>
@@ -89,6 +92,44 @@
                 <td>‘</td><td>………</td><td>折りたたみ（対象の文字の上下を「‘」で囲む必要がある）</td>
               </tr>
             </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!--　サンプルポップアップ　-->
+    <div class="modal fade" id="variables-modal" tabindex="-1" role="dialog">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            <h4 class="modal-title"><span class="glyphicon glyphicon-usd" aria-hidden="true"></span>　変数</h4>
+          </div>
+          <div class="modal-body on-scroll">
+            <table>
+              <tr>
+                <td>No</td><td>変数名</td><td>値</td><td>備考</td>
+              </tr>
+              <tr class="row-var">
+                <td>1</td><td><input type="input" name="variable-name"></td><td><input type="input" name="variable-value"></td><td><input type="input" name="variable-supplement"></td>
+              </tr>
+              <tr class="row-var">
+                <td>2</td><td><input type="input" name="variable-name"></td><td><input type="input" name="variable-value"></td><td><input type="input" name="variable-supplement"></td>
+              </tr>
+              <tr class="row-var">
+                <td>3</td><td><input type="input" name="variable-name"></td><td><input type="input" name="variable-value"></td><td><input type="input" name="variable-supplement"></td>
+              </tr>
+              <tr class="row-var">
+                <td>4</td><td><input type="input" name="variable-name"></td><td><input type="input" name="variable-value"></td><td><input type="input" name="variable-supplement"></td>
+              </tr>
+              <tr class="row-var">
+                <td>5</td><td><input type="input" name="variable-name"></td><td><input type="input" name="variable-value"></td><td><input type="input" name="variable-supplement"></td>
+              </tr>
+            </table>
+            <span>＊変数名は「a～z、1～9、_-」の文字が使用できます。</span>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal" onclick="indexController.saveVaiable();">保存</button>
           </div>
         </div>
       </div>
