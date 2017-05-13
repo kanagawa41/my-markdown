@@ -13,7 +13,7 @@ var Enum = {
 	 DONE : "■",
 	 SUPPLEMENT : "→",
 	 COMMENT : "※",
-	 CONCLUSION : "⇒",
+	 CONCLUSION : "＃",
 	},
 
 	SPECIAL_MARK: {

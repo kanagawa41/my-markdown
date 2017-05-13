@@ -208,6 +208,27 @@ IndexController.prototype.openRow = function() {
 }
 
 /**
+ * 表示の列を非表示状態にする。
+ */
+IndexController.prototype.closeRow = function() {
+    $('#sidebar-area .my_row.toggle').each(function(i){
+        var that = this;
+        var targetRows = $(that).find('[name="target-row"]').val().split(',');
+
+        // 対象の列を表示にする
+        targetRows.forEach(function(rowNumber){
+            $('#sidebar-area #row_' + rowNumber).css('display', 'none');
+            $('#main-area #row_' + rowNumber).css('display', 'none');
+        });
+
+        $(that).find('.my-mark').removeClass('glyphicon-chevron-down');
+        $(that).find('.my-mark').addClass('glyphicon-chevron-up');
+        $(that).removeClass('open');
+        $(that).addClass('fold');
+    });
+}
+
+/**
  * 要素が書き出された後のイベントの設定
  */
 IndexController.prototype.setEventAfterDraw = function() {
@@ -744,7 +765,7 @@ IndexController.prototype.toElement = function(content, variables) {
         regexp = new RegExp('^[' + Enum.SPECIAL_MARK.FOLDAREA + ']', 'g');
         temp = temp.replace(regexp, '');
 
-        regexp = new RegExp('｛｛.+｝｝', 'g');
+        regexp = new RegExp('｛.+｝', 'g');
         // 変数があるか確認
         var valiableName = temp.match(regexp);
         if(valiableName != null) {

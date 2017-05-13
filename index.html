@@ -41,7 +41,10 @@
               </div>
             </div>
             <div id="visual-title-wrapper">
-              <div class="title">PREVIEW　<a href="#" data-toggle="tooltip" title="全て展開する"><span class="glyphicon glyphicon-folder-open" onclick="indexController.openRow();"></span></a><span class="full-size-mark glyphicon glyphicon-resize-full pull-right"></span></div>
+              <div class="title">PREVIEW　
+                <a href="#" data-toggle="tooltip" title="全て開く"><span class="glyphicon glyphicon-folder-open" onclick="indexController.openRow();"></span></a>　
+                <a href="#" data-toggle="tooltip" title="全て閉じる"><span class="glyphicon glyphicon-folder-close" onclick="indexController.closeRow();"></span></a><span class="full-size-mark glyphicon glyphicon-resize-full pull-right"></span>
+              </div>
             </div>
           </div>
           <div id="making-area">
@@ -86,12 +89,30 @@
                 <td>※</td><td>………</td><td>注釈</td>
               </tr>
               <tr>
-                <td>⇒</td><td>………</td><td>結論</td>
+                <td>＃</td><td>………</td><td>結論</td>
               </tr>
               <tr>
-                <td>‘</td><td>………</td><td>折りたたみ（対象の文字の上下を「‘」で囲む必要がある）</td>
+                <td>”</td><td>………</td><td>折りたたみ（対象の文字の上下を「‘」で囲む必要がある）</td>
+              </tr>
+              <tr>
+                <td>｛変数名｝</td><td>………</td><td>変数機能。設定された値に変換する</td>
               </tr>
             </table>
+            <br />
+            サンプル
+            <pre>
+□「9999」（｛レッドマイン｝9999）「承認済み」ボタンが表示されない（マスタ権限のはずなのに）
+”
+　→チケットを起票する
+　→事象を確認する
+”
+　→テストさんに結果報告のチケットを渡している
+
+■「9998」（｛レッドマイン｝9998） 画像アップ時に日本語のバリデーションがかからない
+　■サブタスク
+　　※注釈
+　＃結論
+</pre>
           </div>
         </div>
       </div>
@@ -126,7 +147,7 @@
                 <td>5</td><td><input type="input" name="variable-name"></td><td><input type="input" name="variable-value"></td><td><input type="input" name="variable-supplement"></td>
               </tr>
             </table>
-            <span>＊変数名は「a～z、1～9、_-」の文字が使用できます。</span>
+            <span>＊変数名は全ての文字が使用できます。</span>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal" onclick="indexController.saveVaiable();">保存</button>
