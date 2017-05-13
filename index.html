@@ -36,8 +36,9 @@
           <div id="area-title">
             <div id="making-title-wrapper">
               <div class="title">RAW MARK　
-              <a href="#" data-toggle="tooltip" title="使用できる記号は？"><span class="glyphicon glyphicon-question-sign" onclick="$('#simbol-list-modal').modal('show');"></span></a>　
-              <a href="#" data-toggle="tooltip" title="変数"><span class="glyphicon glyphicon glyphicon-usd" onclick="$('#variables-modal').modal('show');"></span></a>
+                <a href="#" data-toggle="tooltip" title="ノートを変更する？"><select id="target-note"></select></a>　
+                <a href="#" data-toggle="tooltip" title="変数を変更する？"><span class="glyphicon glyphicon glyphicon-usd" onclick="$('#variables-modal').modal('show');"></span></a>　
+                <a href="#" data-toggle="tooltip" title="これの使い方は？"><span class="glyphicon glyphicon-question-sign" onclick="$('#simbol-list-modal').modal('show');"></span></a>　
               </div>
             </div>
             <div id="visual-title-wrapper">
@@ -72,9 +73,13 @@
         <div class="modal-content">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-            <h4 class="modal-title"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>　記号一覧</h4>
+            <h4 class="modal-title"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>　ツールの使い方</h4>
           </div>
           <div class="modal-body on-scroll">
+            <h4>■TASKMARKでは何ができるか？</h4>
+            <div>おれおれマークダウンです。半角に変えるのが面倒なので記号は全部全角です。左のテキストエリアに特定の記号を打つと、左のビジュアルエリアにいい感じに表示されます。多少の色付けと、折りたたみ機能を有します。また変数を使用できます。URLなどの長い固定文に役立ててください。複数のノートを切り替えることもできます。</div>
+            <br />
+            <h4>■使用できる記号</h4>
             <table>
               <tr>
                 <td>□</td><td>………</td><td>未完了タスク</td>
@@ -99,7 +104,7 @@
               </tr>
             </table>
             <br />
-            サンプル
+            <h4>■書き方のサンプル</h4>
             <pre>
 □「9999」（｛レッドマイン｝9999）「承認済み」ボタンが表示されない（マスタ権限のはずなのに）
 ”

@@ -6,6 +6,17 @@ var IndexController = function() {
     if(!(this instanceof IndexController)) {
         return new IndexController();
     }
+
+    // メモの初期化
+    var doc = store.get(Enum.CONFIG.STOREKEY_DOCUMENT);
+    if(!doc || doc.length < Enum.CONFIG.SAVE_DOCUMENT_LIMIT) {
+        var initArray = [];
+        for(var i = 0; i <= parseInt(Enum.CONFIG.SAVE_DOCUMENT_LIMIT); i++){
+            initArray.push('');
+        }
+        store.set(Enum.CONFIG.STOREKEY_DOCUMENT, initArray);
+        store.set(Enum.CONFIG.STOREKEY_DOCUMENT_SELECT, 0);
+    }
 }
 
 /**
@@ -58,12 +69,37 @@ IndexController.prototype.init = function() {
  * ビジュアルの設定
  */
 IndexController.prototype.initVisual = function() {    
+    var controller = this;
+
     this.partsWidth = $(window).width() / 2;
     this.windowHeight = $(window).height()
         - $('#header').height()
         - $('#making-title-wrapper').height();
 
     this.resize();
+
+    // セレクタに追加
+    var inFunc = function() {
+        var characters = {};
+        var limit = parseInt(Enum.CONFIG.SAVE_DOCUMENT_LIMIT);
+        for(var i = 0; i < parseInt(Enum.CONFIG.SAVE_DOCUMENT_LIMIT); i++){
+            characters[i] = 'ノート' + (i + 1);
+        }
+
+        var $select = $('#target-note');
+        var $option;
+        var isSelected;
+        var targetNum = store.get(Enum.CONFIG.STOREKEY_DOCUMENT_SELECT); // 前回の選択ノート
+
+        // コールバック関数の引数の順序が $.each と異なることに注意。
+        var options = $.map(characters, function (name, value) {
+            isSelected = (parseInt(value) === targetNum);
+            $option = $('<option>', { value: value, text: name, selected: isSelected });
+            return $option;
+        });
+
+        $select.append(options);
+    }();
 
     this.editor = ace.edit("ace_editor");
     this.editor.setFontSize(14);
@@ -75,7 +111,7 @@ IndexController.prototype.initVisual = function() {
 
     var lastDocument = store.get(Enum.CONFIG.STOREKEY_DOCUMENT);
     if(lastDocument){
-        this.editor.setValue(lastDocument);
+        this.editor.setValue(lastDocument[parseInt(store.get(Enum.CONFIG.STOREKEY_DOCUMENT_SELECT))]);
     }
 
     var variables = store.get(Enum.CONFIG.STOREKEY_VARIABLE);
@@ -119,6 +155,8 @@ IndexController.prototype.initEvent = function() {
         $('#main #description').text('In the input...');
         if (keyUptimer !== false) {
             clearTimeout(keyUptimer);
+        } else {
+            $('#target-note').prop('disabled', true);
         }
         keyUptimer = setTimeout(function() {
             var contentNew = controller.editor.getValue();
@@ -127,15 +165,38 @@ IndexController.prototype.initEvent = function() {
                 controller.updateVisual();
                 controller.setEventAfterDraw();
 
-                $('#main #description').text('Saved!');
+                var tempDocs = store.get(Enum.CONFIG.STOREKEY_DOCUMENT);
+                var targetNum = parseInt($('#target-note').val());
+                tempDocs[targetNum] = contentNew;
+                store.set(Enum.CONFIG.STOREKEY_DOCUMENT, tempDocs);
+                store.set(Enum.CONFIG.STOREKEY_DOCUMENT_SELECT, targetNum);
 
-                store.remove(Enum.CONFIG.STOREKEY_DOCUMENT);
-                store.set(Enum.CONFIG.STOREKEY_DOCUMENT, contentNew);
+                $('#main #description').text('Saved!');
             } else {
                 // 本当はセーブしていないが内容が変わらないので整合性はある。　
                 $('#main #description').text('Saved!!');
             }
+
+            $('#target-note').prop('disabled', false);
+            clearTimeout(keyUptimer);
+            keyUptimer = false;
         }, 1000); // 値を変更すると反映の間隔を変更できる
+    });
+
+    // セレクトボックスを変更した場合
+    $('#target-note').on('change', function(){
+        store.set(Enum.CONFIG.STOREKEY_DOCUMENT_SELECT, $(this).val());
+
+        var docs = store.get(Enum.CONFIG.STOREKEY_DOCUMENT);
+        controller.editor.setValue(docs[parseInt($(this).val())]);
+
+        // 値を入れることにより選択状態になるため解除
+        controller.editor.gotoLine(0, 0, true);
+        controller.editor.selection.moveCursorRight();
+        controller.editor.selection.moveCursorLeft();
+        controller.editor.focus();
+
+        $('#main #description').text('Note changed!');
     });
 
     // ヴィジュアルエリアの拡大
@@ -182,7 +243,6 @@ IndexController.prototype.saveVaiable = function() {
         datas.push(variable);
     });
 
-    store.remove(Enum.CONFIG.STOREKEY_VARIABLE);
     store.set(Enum.CONFIG.STOREKEY_VARIABLE, datas);
 }
 
