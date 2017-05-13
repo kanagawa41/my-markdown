@@ -71,10 +71,10 @@ IndexController.prototype.init = function() {
 IndexController.prototype.initVisual = function() {    
     var controller = this;
 
-    this.partsWidth = $(window).width() / 2;
-    this.windowHeight = $(window).height()
-        - $('#header').height()
-        - $('#making-title-wrapper').height();
+    this.partsWidth = Math.floor($(window).width() / 2);
+    this.windowHeight = Math.floor($(window).height())
+        - Math.floor($('#page-wrapper').height())
+        - Math.floor($('#making-title-wrapper').height());
 
     this.resize();
 
