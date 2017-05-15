@@ -8,14 +8,24 @@ var IndexController = function() {
     }
 
     // メモの初期化
-    var doc = store.get(Enum.CONFIG.STOREKEY_DOCUMENT);
+    var doc = store.get(Enum.STOREKEY.DOCUMENTS);
     if(!doc || doc.length < Enum.CONFIG.SAVE_DOCUMENT_LIMIT) {
         var initArray = [];
         for(var i = 0; i <= parseInt(Enum.CONFIG.SAVE_DOCUMENT_LIMIT); i++){
             initArray.push('');
         }
-        store.set(Enum.CONFIG.STOREKEY_DOCUMENT, initArray);
-        store.set(Enum.CONFIG.STOREKEY_DOCUMENT_SELECT, 0);
+        store.set(Enum.STOREKEY.DOCUMENTS, initArray);
+        store.set(Enum.STOREKEY.SELECT_DOCUMENT, 0);
+    }
+
+    // タイトルの初期化
+    var titles = store.get(Enum.STOREKEY.DOCUMENT_TITLES);
+    if(!titles){
+        var characters = {};
+        for(var i = 0; i < parseInt(Enum.CONFIG.SAVE_DOCUMENT_LIMIT); i++){
+            characters[i] = Enum.CONFIG.DEFAULT_TITLE + (i + 1);
+        }
+        store.set(Enum.STOREKEY.DOCUMENT_TITLES, characters);
     }
 }
 
@@ -80,16 +90,12 @@ IndexController.prototype.initVisual = function() {
 
     // セレクタに追加
     var inFunc = function() {
-        var characters = {};
-        var limit = parseInt(Enum.CONFIG.SAVE_DOCUMENT_LIMIT);
-        for(var i = 0; i < parseInt(Enum.CONFIG.SAVE_DOCUMENT_LIMIT); i++){
-            characters[i] = 'ノート' + (i + 1);
-        }
+        var characters = store.get(Enum.STOREKEY.DOCUMENT_TITLES);
 
         var $select = $('#target-note');
         var $option;
         var isSelected;
-        var targetNum = store.get(Enum.CONFIG.STOREKEY_DOCUMENT_SELECT); // 前回の選択ノート
+        var targetNum = store.get(Enum.STOREKEY.SELECT_DOCUMENT); // 前回の選択ノート
 
         // コールバック関数の引数の順序が $.each と異なることに注意。
         var options = $.map(characters, function (name, value) {
@@ -109,12 +115,12 @@ IndexController.prototype.initVisual = function() {
     this.editor.$blockScrolling = Infinity;
     this.Range = ace.require('ace/range').Range;
 
-    var lastDocument = store.get(Enum.CONFIG.STOREKEY_DOCUMENT);
+    var lastDocument = store.get(Enum.STOREKEY.DOCUMENTS);
     if(lastDocument){
-        this.editor.setValue(lastDocument[parseInt(store.get(Enum.CONFIG.STOREKEY_DOCUMENT_SELECT))]);
+        this.editor.setValue(lastDocument[parseInt(store.get(Enum.STOREKEY.SELECT_DOCUMENT))]);
     }
 
-    var variables = store.get(Enum.CONFIG.STOREKEY_VARIABLE);
+    var variables = store.get(Enum.STOREKEY.VARIABLES);
     if(variables){
         $('#variables-modal .row-var').each(function(i, content){
             var variable = variables[i];
@@ -165,11 +171,27 @@ IndexController.prototype.initEvent = function() {
                 controller.updateVisual();
                 controller.setEventAfterDraw();
 
-                var tempDocs = store.get(Enum.CONFIG.STOREKEY_DOCUMENT);
+                var tempDocs = store.get(Enum.STOREKEY.DOCUMENTS);
                 var targetNum = parseInt($('#target-note').val());
                 tempDocs[targetNum] = contentNew;
-                store.set(Enum.CONFIG.STOREKEY_DOCUMENT, tempDocs);
-                store.set(Enum.CONFIG.STOREKEY_DOCUMENT_SELECT, targetNum);
+
+                // タイトルをセレクトボックスORストレージに登録する
+                var titles = {};
+                $('#target-note option').each(function(i, content){
+                    if($(this).val() == targetNum){
+                        var title = controller.editor.session.getLine(0);
+                        if(title){
+                            $(this).text(title); // 一行目を取得しタイトルとして設定
+                        } else {
+                            $(this).text(Enum.CONFIG.DEFAULT_TITLE + (targetNum + 1));
+                        }
+                    }
+                    titles[$(this).val()] = $(this).text();
+                });
+
+                store.set(Enum.STOREKEY.DOCUMENT_TITLES, titles);
+                store.set(Enum.STOREKEY.DOCUMENTS, tempDocs);
+                store.set(Enum.STOREKEY.SELECT_DOCUMENT, targetNum);
 
                 $('#main #description').text('Saved!');
             } else {
@@ -185,9 +207,9 @@ IndexController.prototype.initEvent = function() {
 
     // セレクトボックスを変更した場合
     $('#target-note').on('change', function(){
-        store.set(Enum.CONFIG.STOREKEY_DOCUMENT_SELECT, $(this).val());
+        store.set(Enum.STOREKEY.SELECT_DOCUMENT, $(this).val());
 
-        var docs = store.get(Enum.CONFIG.STOREKEY_DOCUMENT);
+        var docs = store.get(Enum.STOREKEY.DOCUMENTS);
         controller.editor.setValue(docs[parseInt($(this).val())]);
 
         // 値を入れることにより選択状態になるため解除
@@ -243,7 +265,7 @@ IndexController.prototype.saveVaiable = function() {
         datas.push(variable);
     });
 
-    store.set(Enum.CONFIG.STOREKEY_VARIABLE, datas);
+    store.set(Enum.STOREKEY.VARIABLES, datas);
 }
 
 /**
@@ -690,7 +712,7 @@ IndexController.prototype.charAnalysis = function(rawContent) {
     var doneChildren = null;
     var foldIndent = null;
     var foldAreas = null;
-    var variables = store.get(Enum.CONFIG.STOREKEY_VARIABLE);
+    var variables = store.get(Enum.STOREKEY.VARIABLES);
     contents.forEach(function(content){
         var element = controller.toElement(content, variables);
 
