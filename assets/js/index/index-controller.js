@@ -107,6 +107,14 @@ IndexController.prototype.initVisual = function() {
         $select.append(options);
     }();
 
+    // テキストラベルのCSSを統一する。
+    $('#title-label').css('width', $('#title-edit').css('width'));
+    $('#title-label').css('height', $('#title-edit').css('height'));
+    $('#title-label').css('padding', $('#title-edit').css('padding'));
+    $('#title-label').css('font-size', $('#title-edit').css('font-size'));
+    $('#title-label').css('line-height', $('#title-edit').css('line-height'));
+    $('#title-label').css('color', $('#title-edit').css('color'));
+
     this.editor = ace.edit("ace_editor");
     this.editor.setFontSize(14);
     // this.editor.resize(true);
@@ -158,7 +166,7 @@ IndexController.prototype.initEvent = function() {
     var contentOld = null;
     var keyUptimer = false;
     this.editor.session.on('change', function(){
-        $('#main #description').text('In the input...');
+        $('#header #description').text('In the input...');
         if (keyUptimer !== false) {
             clearTimeout(keyUptimer);
         } else {
@@ -175,34 +183,40 @@ IndexController.prototype.initEvent = function() {
                 var targetNum = parseInt($('#target-note').val());
                 tempDocs[targetNum] = contentNew;
 
-                // タイトルをセレクトボックスORストレージに登録する
-                var titles = {};
-                $('#target-note option').each(function(i, content){
-                    if($(this).val() == targetNum){
-                        var title = controller.editor.session.getLine(0);
-                        if(title){
-                            $(this).text(title); // 一行目を取得しタイトルとして設定
-                        } else {
-                            $(this).text(Enum.CONFIG.DEFAULT_TITLE + (targetNum + 1));
-                        }
-                    }
-                    titles[$(this).val()] = $(this).text();
-                });
-
-                store.set(Enum.STOREKEY.DOCUMENT_TITLES, titles);
                 store.set(Enum.STOREKEY.DOCUMENTS, tempDocs);
                 store.set(Enum.STOREKEY.SELECT_DOCUMENT, targetNum);
 
-                $('#main #description').text('Saved!');
+                $('#header #description').text('Saved!');
             } else {
                 // 本当はセーブしていないが内容が変わらないので整合性はある。　
-                $('#main #description').text('Saved!!');
+                $('#header #description').text('Saved!!');
             }
 
             $('#target-note').prop('disabled', false);
             clearTimeout(keyUptimer);
             keyUptimer = false;
         }, 1000); // 値を変更すると反映の間隔を変更できる
+    });
+
+    // TODO：セレクトされたときにビジュアルも色をつける
+    controller.editor.selection.on("changeSelection", function(){
+        var selectionRange = controller.editor.getSelectionRange();
+
+        var startLine = selectionRange.start.row;
+        var endLine = selectionRange.end.row;
+// console.log(startLine);
+// console.log(endLine);
+
+        $('#sidebar-area .my_row').each(function(i, content){
+            $(this).removeClass('none-selected');
+
+            if(i >= startLine && i < endLine){
+                $(this).addClass('selected');
+            } else {
+                $(this).addClass('none-selected');
+                $(this).removeClass('selected');
+            }
+        })        
     });
 
     // セレクトボックスを変更した場合
@@ -218,8 +232,10 @@ IndexController.prototype.initEvent = function() {
         controller.editor.selection.moveCursorLeft();
         controller.editor.focus();
 
-        $('#main #description').text('Note changed!');
+        $('#title-label').text($(this).find('option:selected').text());
+        $('#header #description').text('Note changed!');
     });
+    $('#target-note').change();
 
     // ヴィジュアルエリアの拡大
     $('.glyphicon-resize-full').on('click', function() {
@@ -238,6 +254,62 @@ IndexController.prototype.initEvent = function() {
 
         controller.updateVisual();
         controller.setEventAfterDraw();
+    });
+
+    // テキストラベルのチェンジイベント
+    $('#title-label').click(function() {
+        $('#title-label').css( 'display', 'none');
+        $('#title-edit')
+            .val( $( '#title-label').text())
+            .css( 'display', '')
+            .focus();
+    });
+    $('#title-edit').blur(function() {
+        $('#title-edit').css('display', 'none');
+        $('#title-label')
+            .text($('#title-edit').val())
+            .css('display', '');
+
+        // タイトルをセレクトボックスORストレージに登録する
+        var targetNum = parseInt($('#target-note').val());
+        var titles = {};
+        $('#target-note option').each(function(i, content){
+            if($(this).val() == targetNum){
+                var title = $('#title-edit').val();
+                if(title){
+                    $(this).text(title); // 一行目を取得しタイトルとして設定
+                } else {
+                    $(this).text(Enum.CONFIG.DEFAULT_TITLE + (targetNum + 1));
+                }
+            }
+            titles[$(this).val()] = $(this).text();
+        });
+
+        store.set(Enum.STOREKEY.DOCUMENT_TITLES, titles);
+        $('#header #description').text('Title saved!');
+    });
+
+    // TODO: アップロードしたJSONファイルを読み込みローカルストレージニ保持する。
+    // ファイルアップロードイベント
+    $("#fileupload").on('change', function() {
+        if(this.length == 0){ 
+            console.log('No selected file!');
+            return;
+        } else {
+            console.log('Selected file!');
+        }
+
+        console.log(this.length);
+        
+        var fileReader = new FileReader();
+        fileReader.onload = function(fileLoadedEvent){
+            console.log(fileLoadedEvent);
+            var textFromFileLoaded = fileLoadedEvent.target.result;
+            $('#title-label').text(textFromFileLoaded);
+        };
+
+        var blob = new Blob([this[0]], { type: "text/plain" });
+        fileReader.readAsText(blob, "UTF-8");
     });
 
     // 画面のリサイズイベント
@@ -287,6 +359,31 @@ IndexController.prototype.openRow = function() {
         $(that).removeClass('fold');
         $(that).addClass('open');
     });
+}
+
+/**
+ * ローカルストレージに保持している値をエクスポートする。
+ */
+IndexController.prototype.exportData = function() {
+    var tasks = {
+        "DOCUMENT_TITLES": store.get(Enum.STOREKEY.DOCUMENT_TITLES),
+        "DOCUMENTS": store.get(Enum.STOREKEY.DOCUMENTS),
+        "SELECT_DOCUMENT": store.get(Enum.STOREKEY.SELECT_DOCUMENT),
+        "VARIABLES": store.get(Enum.STOREKEY.VARIABLES),
+    };
+     
+    var data = JSON.stringify(tasks);
+    var a = document.getElementById('export-link');
+    a.download = 'tasks.json';
+    a.href = window.URL.createObjectURL(new Blob([data], { type: 'text/plain' }));
+    a.dataset.downloadurl = ['text/plain', a.download, a.href].join(':');
+}
+
+/**
+ * 指定のJSONファイルのデータをローカルストレージにインポートする。
+ */
+IndexController.prototype.importData = function() {
+    $('#fileupload').click();
 }
 
 /**
@@ -457,7 +554,7 @@ IndexController.prototype.toSidebarHtml = function(element) {
         return htmlChar;
     }
 
-    return '<div id="row_' + index + '" class="my_row">&nbsp;<br /></div>'; 
+    return '<div id="row_' + index + '" class="my_row none-selected"><span class="my-mark dummy glyphicon glyphicon-stop"></span></div>'; 
 }
 
 /**

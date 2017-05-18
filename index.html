@@ -18,7 +18,19 @@
     <div id="page-wrapper">
       <!-- Header -->
       <header id="header">
-        TASKMARK
+        <!--　FIXME: 幅を決め打ちしているが動的に変えたい -->
+        <div style="float: left; width: 4%;">
+          TASK<br/>
+          　MARK
+        </div>
+        <!--　FIXME: 幅を決め打ちしているが動的に変えたい -->
+        <div style="float: left; width: 90%;">
+          <div id="title-label"></div>
+          <input id="title-edit" type="text" class="form-control" placeholder="タイトル" aria-describedby="basic-addon1" style="display:none;">
+          <div id="description" class="text-center">
+            Show state
+          </div>
+        </div>
       </header>
 <!-- 
       <nav id="nav">
@@ -30,15 +42,15 @@
       <!-- Main -->
       <div id="main-wrapper">
         <div id="main">
-          <div id="description" class="text-center">
-            Show state
-          </div>
           <div id="area-title">
             <div id="making-title-wrapper">
               <div class="title">RAW MARK　
                 <a href="#" data-toggle="tooltip" title="変数を変更する？"><span class="glyphicon glyphicon glyphicon-usd" onclick="$('#variables-modal').modal('show');"></span></a>　
                 <a href="#" data-toggle="tooltip" title="ノートを変更する？"><select id="target-note"></select></a>　
+                <a href="#" data-toggle="tooltip" title="エクスポートする" id="export-link"><span class="glyphicon glyphicon-export" onclick="indexController.exportData();"></span></a>　
+                <a href="#" data-toggle="tooltip" title="インポートする" id="export-link"><span class="glyphicon glyphicon-import" onclick="indexController.importData();"></span></a>　
                 <a href="#" data-toggle="tooltip" title="これの使い方は？"><span class="glyphicon glyphicon-question-sign" onclick="$('#simbol-list-modal').modal('show');"></span></a>　
+                <input id="fileupload" type="file" name="files[]" multiple　style="display:none;">
               </div>
             </div>
             <div id="visual-title-wrapper">

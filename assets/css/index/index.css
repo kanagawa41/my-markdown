@@ -2,8 +2,8 @@
 #header {
     padding-left: 1rem;
     width: 100%;
-    height: 3rem;
-    line-height: 3rem;
+    height: 5rem;
+    /*line-height: 3rem;*/
     color: #09c; }
 
 #description {
@@ -89,6 +89,14 @@
         border-bottom: solid 1px #fff; }
         #sidebar-area .my_row.toggle {
             cursor: pointer; }
+    #sidebar-area .none-selected {
+        border-left-width: 1px;
+        border-left-color: #fff;
+        border-left-style: solid; }
+    #sidebar-area .selected {
+        border-left-width: 1px;
+        border-left-color: #000;
+        border-left-style: solid; }
 
 /**
  * 各要素ごとの設定
@@ -100,6 +108,9 @@
 .my-mark {
     /*color: #09c;*/
     color: #000; }
+
+#sidebar-area .my-mark.dummy {
+    color: #fff; }
 
 .mark-done .my-mark {
     color: #c7c7c7; }
