@@ -443,11 +443,12 @@ IndexController.prototype.removeNote = function() {
 }
 
 /**
- * TODO まだ実装できていない。
  * ローカルストレージをリセットする。
  */
 IndexController.prototype.resetSetting = function() {
-    // TODO: 削除の旨のダイアログを表示する処理を追加する。
+    if(!confirm('ノートの情報等をリセットしますか？')){
+        return false;
+    }
 
     store.remove(Enum.STOREKEY.DOCUMENT_TITLES);
     store.remove(Enum.STOREKEY.DOCUMENTS);
