@@ -206,8 +206,7 @@ IndexController.prototype.initEvent = function() {
         var endLine = selectionRange.end.row;
 
         $('#sidebar-area .my_row').each(function(i, content){
-            var rowNumber = $(this).attr('id').split('_')[1];
-
+            var rowNumber = $(this).attr('id').split('row-')[1];
             $(this).removeClass('none-selected');
 
             if(rowNumber >= startLine && rowNumber < endLine){
@@ -350,8 +349,8 @@ IndexController.prototype.openRow = function() {
 
         // 対象の列を表示にする
         targetRows.forEach(function(rowNumber){
-            $('#sidebar-area #row_' + rowNumber).css('display', '');
-            $('#main-area #row_' + rowNumber).css('display', '');
+            $('#sidebar-area #row-' + rowNumber).css('display', '');
+            $('#main-area #row-' + rowNumber).css('display', '');
         });
 
         $(that).find('.my-mark').removeClass('glyphicon-chevron-up');
@@ -396,8 +395,8 @@ IndexController.prototype.closeRow = function() {
 
         // 対象の列を表示にする
         targetRows.forEach(function(rowNumber){
-            $('#sidebar-area #row_' + rowNumber).css('display', 'none');
-            $('#main-area #row_' + rowNumber).css('display', 'none');
+            $('#sidebar-area #row-' + rowNumber).css('display', 'none');
+            $('#main-area #row-' + rowNumber).css('display', 'none');
         });
 
         $(that).find('.my-mark').removeClass('glyphicon-chevron-down');
@@ -422,12 +421,12 @@ IndexController.prototype.setEventAfterDraw = function() {
                 // 対象の列を非表示にする
                 targetRows.forEach(function(rowNumber){
                     // もし閉じる列がトグルを保持している場合は閉じる
-                    if($('#sidebar-area #row_' + rowNumber).hasClass('toggle') && $('#sidebar-area #row_' + rowNumber).hasClass('open')){
-                        $('#sidebar-area #row_' + rowNumber).click();
+                    if($('#sidebar-area #row-' + rowNumber).hasClass('toggle') && $('#sidebar-area #row-' + rowNumber).hasClass('open')){
+                        $('#sidebar-area #row-' + rowNumber).click();
                     }
 
-                    $('#sidebar-area #row_' + rowNumber).css('display', 'none');
-                    $('#main-area #row_' + rowNumber).css('display', 'none');
+                    $('#sidebar-area #row-' + rowNumber).css('display', 'none');
+                    $('#main-area #row-' + rowNumber).css('display', 'none');
                 });
 
                 $(that).find('.my-mark').removeClass('glyphicon-chevron-down');
@@ -437,8 +436,8 @@ IndexController.prototype.setEventAfterDraw = function() {
             } else if($(that).hasClass('fold')){ // 閉じている状態
                 // 対象の列を表示にする
                 targetRows.forEach(function(rowNumber){
-                    $('#sidebar-area #row_' + rowNumber).css('display', '');
-                    $('#main-area #row_' + rowNumber).css('display', '');
+                    $('#sidebar-area #row-' + rowNumber).css('display', '');
+                    $('#main-area #row-' + rowNumber).css('display', '');
                 });
 
                 $(that).find('.my-mark').removeClass('glyphicon-chevron-up');
@@ -470,7 +469,7 @@ IndexController.prototype.setEventAfterDraw = function() {
         // ダブルクリック
         $(that).dblclick(function () {
             // 対象の列にカーソルをあてる
-            var row = $(that).attr("id").replace('row_', '');
+            var row = $(that).attr("id").replace('row-', '');
             controller.editor.gotoLine((parseInt(row) + 1), 0, true);
             // エディタで文字を入力するとエラーが発生するため下記のメソッドでリセット？をして解消している
             controller.editor.selection.moveCursorRight();
@@ -482,7 +481,7 @@ IndexController.prototype.setEventAfterDraw = function() {
     // sidebarとmainの各行の高さを取得して高さを合わせる。
     $('#main-area .my_row').each(function(i){
         var that = this;
-        $('#sidebar-area #row_' + i).height($(this).height());
+        $('#sidebar-area #row-' + i).height($(this).height());
     });
 }
 
@@ -534,7 +533,7 @@ IndexController.prototype.toSidebarHtml = function(element) {
         var markIcon = 'glyphicon glyphicon-chevron-down';
 
         var htmlChar = '';
-        htmlChar += '<div id="row_' + index + '" class="my_row toggle">';
+        htmlChar += '<div id="row-' + index + '" class="my_row toggle">';
         htmlChar += '  <span class="my-mark ' + markIcon + '"></span>';
         htmlChar += '  <input type="hidden" name="target-row" value="' + foldAreas.join(',') + '">';
         htmlChar += '</div>';
@@ -546,7 +545,7 @@ IndexController.prototype.toSidebarHtml = function(element) {
         var markIcon = 'glyphicon glyphicon-chevron-down';
 
         var htmlChar = '';
-        htmlChar += '<div id="row_' + index + '" class="my_row toggle">';
+        htmlChar += '<div id="row-' + index + '" class="my_row toggle">';
         htmlChar += '  <span class="my-mark ' + markIcon + '"></span>';
         htmlChar += '  <input type="hidden" name="target-row" value="' + doneChildren.join(',') + '">';
         htmlChar += '</div>';
@@ -554,7 +553,7 @@ IndexController.prototype.toSidebarHtml = function(element) {
         return htmlChar;
     }
 
-    return '<div id="row_' + index + '" class="my_row none-selected"><span class="my-mark dummy glyphicon glyphicon-stop"></span></div>'; 
+    return '<div id="row-' + index + '" class="my_row none-selected"><span class="my-mark dummy glyphicon glyphicon-stop"></span></div>'; 
 }
 
 /**
@@ -623,7 +622,7 @@ IndexController.prototype.createTitleHtml = function(element) {
     var content = element[IndexController.ELEMENT.CONTENT];
 
     var htmlChar = '';
-    htmlChar += '<div id="row_' + index + '" class="my_row focusout">';
+    htmlChar += '<div id="row-' + index + '" class="my_row focusout">';
     htmlChar += ' <div class="my-title">';
     htmlChar += '  <div class="my-content char-font">' + content + '</div>';
     htmlChar += ' </div>';      
@@ -641,7 +640,7 @@ IndexController.prototype.createNormalCharHtml = function(element) {
     var content = element[IndexController.ELEMENT.CONTENT];
 
     var htmlChar = '';
-    htmlChar += '<div id="row_' + index + '" class="my_row focusout">';
+    htmlChar += '<div id="row-' + index + '" class="my_row focusout">';
     htmlChar += ' <div class="my-indent" style="margin-left:' + indent + 'em;">';
     htmlChar += '  <div class="my-content char-font">' + content + '</div>';
     htmlChar += ' </div>';      
@@ -657,7 +656,7 @@ IndexController.prototype.createBlankHtml = function(element) {
     var index = element[IndexController.ELEMENT.INDEX];
 
     var htmlChar = '';
-    htmlChar += '<div id="row_' + index + '" class="my_row focusout">';
+    htmlChar += '<div id="row-' + index + '" class="my_row focusout">';
     htmlChar += ' <span class="my-mark"></span>';
     htmlChar += ' <div class="my-content char-font">&nbsp;</div>';
     htmlChar += '</div>';       
@@ -677,7 +676,7 @@ IndexController.prototype.createTaskHtml = function(element) {
     var markIcon = 'glyphicon glyphicon-unchecked';
 
     var htmlChar = '';
-    htmlChar += '<div id="row_' + index + '" class="my_row ' + symbol + ' focusout">';
+    htmlChar += '<div id="row-' + index + '" class="my_row ' + symbol + ' focusout">';
     htmlChar += ' <div class="my-indent" style="margin-left:' + indent + 'em;">';
     htmlChar += '  <span class="my-mark ' + markIcon + '"></span>';
     htmlChar += '  <div class="my-content char-font">' + content + '</div>';
@@ -700,7 +699,7 @@ IndexController.prototype.createDoneHtml = function(element) {
     var markIcon = 'glyphicon glyphicon-check';
 
     var htmlChar = '';
-    htmlChar += '<div id="row_' + index + '" class="my_row ' + symbol + ' focusout">';
+    htmlChar += '<div id="row-' + index + '" class="my_row ' + symbol + ' focusout">';
     htmlChar += ' <div class="my-indent" style="margin-left:' + indent + 'em;">';
     htmlChar += '  <span class="my-mark ' + markIcon + '"></span>';
     htmlChar += '  <div class="my-content char-font">' + content + '</div>';
@@ -722,7 +721,7 @@ IndexController.prototype.createSupplementHtml = function(element) {
     var markIcon = 'glyphicon glyphicon-arrow-right';
 
     var htmlChar = '';
-    htmlChar += '<div id="row_' + index + '" class="my_row ' + symbol + ' focusout">';
+    htmlChar += '<div id="row-' + index + '" class="my_row ' + symbol + ' focusout">';
     htmlChar += ' <div class="my-indent" style="margin-left:' + indent + 'em;">';
     htmlChar += '  <span class="my-mark ' + markIcon + '"></span>';
     htmlChar += '  <div class="my-content char-font">' + content + '</div>';
@@ -744,7 +743,7 @@ IndexController.prototype.createCommentHtml = function(element) {
     var markIcon = 'glyphicon glyphicon-asterisk';
 
     var htmlChar = '';
-    htmlChar += '<div id="row_' + index + '" class="my_row ' + symbol + ' focusout">';
+    htmlChar += '<div id="row-' + index + '" class="my_row ' + symbol + ' focusout">';
     htmlChar += ' <div class="my-indent" style="margin-left:' + indent + 'em;">';
     htmlChar += '  <span class="my-mark ' + markIcon + '"></span>';
     htmlChar += '  <div class="my-content char-font">' + content + '</div>';
@@ -766,7 +765,7 @@ IndexController.prototype.createConclusionHtml = function(element) {
     var markIcon = 'glyphicon glyphicon-thumbs-up';
 
     var htmlChar = '';
-    htmlChar += '<div id="row_' + index + '" class="my_row ' + symbol + ' focusout">';
+    htmlChar += '<div id="row-' + index + '" class="my_row ' + symbol + ' focusout">';
     htmlChar += ' <div class="my-indent" style="margin-left:' + indent + 'em;">';
     htmlChar += '  <span class="my-mark ' + markIcon + '"></span>';
     htmlChar += '  <div class="my-content char-font">' + content + '</div>';
@@ -786,7 +785,7 @@ IndexController.prototype.createFoldHtml = function(element) {
 
     var htmlChar = '';
 
-    htmlChar += '<div id="row_' + index + '" class="my_row focusout">';
+    htmlChar += '<div id="row-' + index + '" class="my_row focusout">';
     htmlChar += ' <div class="my-indent" style="margin-left:' + indent + 'em;">';
     htmlChar += '  <div class="my-content char-font">' + content + '</div>';
     htmlChar += ' </div>';      
