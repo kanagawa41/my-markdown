@@ -44,11 +44,14 @@
           <div id="area-title">
             <div id="making-title-wrapper">
               <div class="title">RAW MARK　
-                <a href="#" data-toggle="tooltip" title="変数を変更する？"><span class="glyphicon glyphicon glyphicon-usd" onclick="$('#variables-modal').modal('show');"></span></a>　
-                <a href="#" data-toggle="tooltip" title="エクスポートする" id="export-link"><span class="glyphicon glyphicon-export" onclick="indexController.exportData();"></span></a>　
-                <a href="#" data-toggle="tooltip" title="インポートする" id="export-link"><span class="glyphicon glyphicon-import" onclick="indexController.importData();"></span></a>　
-                <a href="#" data-toggle="tooltip" title="ノートを変更する？"><select id="target-note"></select></a>　
-                <a href="#" data-toggle="tooltip" title="これの使い方は？"><span class="glyphicon glyphicon-question-sign" onclick="$('#simbol-list-modal').modal('show');"></span></a>　
+                <a href="#" data-toggle="tooltip" title="変数の設定"><span class="glyphicon glyphicon glyphicon-usd" onclick="$('#variables-modal').modal('show');"></span></a>&nbsp;&nbsp;
+                <a href="#" data-toggle="tooltip" title="エクスポート" id="export-link"><span class="glyphicon glyphicon-export" onclick="indexController.exportData();"></span></a>&nbsp;&nbsp;
+                <a href="#" data-toggle="tooltip" title="インポート" id="export-link"><span class="glyphicon glyphicon-import" onclick="indexController.importData();"></span></a>&nbsp;&nbsp;
+                <a href="#" data-toggle="tooltip" title="ノートの変更"><select id="target-note"></select></a>&nbsp;&nbsp;
+                <a href="#" data-toggle="tooltip" title="ノートを追加" id="export-link"><span class="glyphicon glyphicon-plus-sign" onclick="indexController.addNote();"></span></a>&nbsp;&nbsp;
+                <a href="#" data-toggle="tooltip" title="ノートを追加" id="export-link"><span class="glyphicon glyphicon-minus-sign" onclick="indexController.removeNote();"></span></a>&nbsp;&nbsp;
+                <a href="#" data-toggle="tooltip" title="設定をリセット" id="export-link"><span class="glyphicon glyphicon-floppy-remove" onclick="indexController.resetSetting();"></span></a>&nbsp;&nbsp;
+                <a href="#" data-toggle="tooltip" title="使い方"><span class="glyphicon glyphicon-question-sign" onclick="$('#simbol-list-modal').modal('show');"></span></a>&nbsp;&nbsp;
                 <input id="fileupload" type="file" name="files[]" multiple　style="display:none;">
               </div>
             </div>

@@ -6,27 +6,6 @@ var IndexController = function() {
     if(!(this instanceof IndexController)) {
         return new IndexController();
     }
-
-    // メモの初期化
-    var doc = store.get(Enum.STOREKEY.DOCUMENTS);
-    if(!doc || doc.length < Enum.CONFIG.SAVE_DOCUMENT_LIMIT) {
-        var initArray = [];
-        for(var i = 0; i <= parseInt(Enum.CONFIG.SAVE_DOCUMENT_LIMIT); i++){
-            initArray.push('');
-        }
-        store.set(Enum.STOREKEY.DOCUMENTS, initArray);
-        store.set(Enum.STOREKEY.SELECT_DOCUMENT, 0);
-    }
-
-    // タイトルの初期化
-    var titles = store.get(Enum.STOREKEY.DOCUMENT_TITLES);
-    if(!titles){
-        var characters = {};
-        for(var i = 0; i < parseInt(Enum.CONFIG.SAVE_DOCUMENT_LIMIT); i++){
-            characters[i] = Enum.CONFIG.DEFAULT_TITLE + (i + 1);
-        }
-        store.set(Enum.STOREKEY.DOCUMENT_TITLES, characters);
-    }
 }
 
 /**
@@ -64,6 +43,7 @@ IndexController.FOLD_AREA_ELEMENT = {
  * 初期処理
  */
 IndexController.prototype.init = function() {
+    this.initLocalstrage();
     this.initVisual();
     this.initEvent();
 
@@ -73,6 +53,18 @@ IndexController.prototype.init = function() {
 
     // マスクを消す
     $("#overlay").fadeOut(400);
+}
+
+/**
+ * ローカルストレージの設定
+ */
+IndexController.prototype.initLocalstrage = function() {
+    // メモの初期化
+    if(!store.get(Enum.STOREKEY.DOCUMENTS)){
+        store.set(Enum.STOREKEY.DOCUMENT_TITLES, {0: Enum.CONFIG.DEFAULT_TITLE});
+        store.set(Enum.STOREKEY.DOCUMENTS, {0: ""});
+        store.set(Enum.STOREKEY.SELECT_DOCUMENT, 0);
+    }
 }
 
 /**
@@ -88,24 +80,8 @@ IndexController.prototype.initVisual = function() {
 
     this.resize();
 
-    // セレクタに追加
-    var inFunc = function() {
-        var characters = store.get(Enum.STOREKEY.DOCUMENT_TITLES);
-
-        var $select = $('#target-note');
-        var $option;
-        var isSelected;
-        var targetNum = store.get(Enum.STOREKEY.SELECT_DOCUMENT); // 前回の選択ノート
-
-        // コールバック関数の引数の順序が $.each と異なることに注意。
-        var options = $.map(characters, function (name, value) {
-            isSelected = (parseInt(value) === targetNum);
-            $option = $('<option>', { value: value, text: name, selected: isSelected });
-            return $option;
-        });
-
-        $select.append(options);
-    }();
+    // コンボボックスの作成
+    this.createTitlebox(store.get(Enum.STOREKEY.DOCUMENT_TITLES), store.get(Enum.STOREKEY.SELECT_DOCUMENT));
 
     this.editor = ace.edit("ace_editor");
     this.editor.setFontSize(14);
@@ -117,7 +93,9 @@ IndexController.prototype.initVisual = function() {
 
     var lastDocument = store.get(Enum.STOREKEY.DOCUMENTS);
     if(lastDocument){
-        this.editor.setValue(lastDocument[parseInt(store.get(Enum.STOREKEY.SELECT_DOCUMENT))]);
+console.log(lastDocument);
+console.log(store.get(Enum.STOREKEY.SELECT_DOCUMENT));
+        this.editor.setValue(lastDocument[store.get(Enum.STOREKEY.SELECT_DOCUMENT)]);
     }
 
     var variables = store.get(Enum.STOREKEY.VARIABLES);
@@ -138,6 +116,24 @@ IndexController.prototype.initVisual = function() {
     this.editor.selection.moveCursorLeft();
     this.editor.focus();
 }
+
+/**
+ * セレクタに追加
+ */
+IndexController.prototype.createTitlebox = function(characters, targetNum) {
+    var $select = $('#target-note');
+    var $option;
+    var isSelected;
+
+    // コールバック関数の引数の順序が $.each と異なることに注意。
+    var options = $.map(characters, function (name, value) {
+        isSelected = (value == targetNum);
+        $option = $('<option>', { value: value, text: name, selected: isSelected });
+        return $option;
+    });
+
+    $select.append(options);
+};
 
 IndexController.prototype.resize = function() {
     $('#making-area').width(this.partsWidth);
@@ -172,7 +168,7 @@ IndexController.prototype.initEvent = function() {
                 controller.setEventAfterDraw();
 
                 var tempDocs = store.get(Enum.STOREKEY.DOCUMENTS);
-                var targetNum = parseInt($('#target-note').val());
+                var targetNum = $('#target-note').val();
                 tempDocs[targetNum] = contentNew;
 
                 store.set(Enum.STOREKEY.DOCUMENTS, tempDocs);
@@ -215,7 +211,7 @@ IndexController.prototype.initEvent = function() {
         store.set(Enum.STOREKEY.SELECT_DOCUMENT, $(this).val());
 
         var docs = store.get(Enum.STOREKEY.DOCUMENTS);
-        controller.editor.setValue(docs[parseInt($(this).val())]);
+        controller.editor.setValue(docs[$(this).val()]);
 
         // 値を入れることにより選択状態になるため解除
         controller.editor.gotoLine(0, 0, true);
@@ -359,10 +355,104 @@ IndexController.prototype.exportData = function() {
 }
 
 /**
+ * TODO まだ実装できていない。
  * 指定のJSONファイルのデータをローカルストレージにインポートする。
  */
 IndexController.prototype.importData = function() {
     $('#fileupload').click();
+}
+
+/**
+ * ノートを追加する。
+ */
+IndexController.prototype.addNote = function() {
+    var controller = this;
+
+    var documents = store.get(Enum.STOREKEY.DOCUMENTS);
+    var titles = store.get(Enum.STOREKEY.DOCUMENT_TITLES);
+    var selected = parseInt($('#target-note').children('option:last-child').val()) + 1;
+
+    // ノートを追加
+    documents[selected] = "";
+    titles[selected] = Enum.CONFIG.DEFAULT_TITLE;
+
+    store.set(Enum.STOREKEY.DOCUMENTS, documents);
+    store.set(Enum.STOREKEY.DOCUMENT_TITLES, titles);
+    store.set(Enum.STOREKEY.SELECT_DOCUMENT, selected);
+
+    // テキストの初期化
+    controller.editor.setValue("");
+    // コンボボックスの作成
+    $('#target-note option').remove('');
+    controller.createTitlebox(titles, selected);
+    $('#title-edit').val($('#target-note').find('option:selected').text());
+
+    $('#header #description').text('Add a note!');
+}
+
+/**
+ * ノートを削除する。
+ */
+IndexController.prototype.removeNote = function() {
+    var controller = this;
+
+    // 最後のノート
+    if($('#target-note').children().length == 1){
+        $('#header #description').text('Can\'t remove a note!');
+        return;
+    }
+
+    var documents = store.get(Enum.STOREKEY.DOCUMENTS);
+    var titles = store.get(Enum.STOREKEY.DOCUMENT_TITLES);
+    var selected = $('#target-note').val();
+
+    delete documents[selected];
+    delete titles[selected];
+
+    var count = 0;
+
+    var alreadyRemove = false;
+    var aheadVal = $('#target-note option:first-child').val();
+    var aheadTitle = $('#target-note option:first-child').text();
+    $('#target-note option').each(function(i, content){
+        if($(this).val() == selected){
+            $(this).remove();
+            alreadyRemove = true;
+            count = i - 1;
+        }
+    });
+
+    if($('#target-note').children().length == 1 || count < 0){
+        count = 0;
+    }
+
+    var nextTarget = $('#target-note option').eq(count);
+    store.set(Enum.STOREKEY.DOCUMENTS, documents);
+    store.set(Enum.STOREKEY.DOCUMENT_TITLES, titles);
+    store.set(Enum.STOREKEY.SELECT_DOCUMENT, $(nextTarget).val());
+
+    // テキストの初期化
+    controller.editor.setValue(documents[$(nextTarget).val()]);
+    $('#title-edit').val($(nextTarget).text());
+    $(nextTarget).prop('selected', true);
+
+    $('#header #description').text('Remove a note!');
+}
+
+/**
+ * TODO まだ実装できていない。
+ * ローカルストレージをリセットする。
+ */
+IndexController.prototype.resetSetting = function() {
+    // TODO: 削除の旨のダイアログを表示する処理を追加する。
+
+    store.remove(Enum.STOREKEY.DOCUMENT_TITLES);
+    store.remove(Enum.STOREKEY.DOCUMENTS);
+    store.remove(Enum.STOREKEY.SELECT_DOCUMENT);
+    store.remove(Enum.STOREKEY.VARIABLES);
+
+    // 画面初期化
+    location.reload();
 }
 
 /**

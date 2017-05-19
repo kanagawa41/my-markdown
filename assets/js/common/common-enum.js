@@ -5,7 +5,7 @@ var Enum = {
 	 // INDENT_WIDTH : 10, ←em単位で設定するため
 	 INDENT_MARK : "　",
 	 SAVE_DOCUMENT_LIMIT : 10,
-	 DEFAULT_TITLE : "ノート",
+	 DEFAULT_TITLE : "無題のノート",
 	},
 
 	STOREKEY: {
