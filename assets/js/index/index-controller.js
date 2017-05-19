@@ -93,8 +93,6 @@ IndexController.prototype.initVisual = function() {
 
     var lastDocument = store.get(Enum.STOREKEY.DOCUMENTS);
     if(lastDocument){
-console.log(lastDocument);
-console.log(store.get(Enum.STOREKEY.SELECT_DOCUMENT));
         this.editor.setValue(lastDocument[store.get(Enum.STOREKEY.SELECT_DOCUMENT)]);
     }
 
@@ -1015,7 +1013,7 @@ IndexController.prototype.toElement = function(content, variables) {
         // '(?!\\s+)(?![' + marks + ']).+$'
         regexp = new RegExp('^[' + marks + ']', 'g');
         temp = temp[0].replace(regexp, '');
-        regexp = new RegExp('^[' + Enum.SPECIAL_MARK.FOLDAREA + ']', 'g');
+        regexp = new RegExp('^[' + Enum.SPECIAL_MARK.FOLD_AREA + ']', 'g');
         temp = temp.replace(regexp, '');
 
         regexp = new RegExp('｛.+｝', 'g');
