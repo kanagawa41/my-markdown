@@ -402,6 +402,10 @@ IndexController.prototype.removeNote = function() {
         return;
     }
 
+    if(!confirm('ノートを削除しますか？')){
+        return false;
+    }
+
     var documents = store.get(Enum.STOREKEY.DOCUMENTS);
     var titles = store.get(Enum.STOREKEY.DOCUMENT_TITLES);
     var selected = $('#target-note').val();
@@ -422,6 +426,7 @@ IndexController.prototype.removeNote = function() {
         }
     });
 
+    // ラスト一つの場合、初回を選択して削除した場合
     if($('#target-note').children().length == 1 || count < 0){
         count = 0;
     }
