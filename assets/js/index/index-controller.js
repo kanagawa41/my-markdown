@@ -107,14 +107,6 @@ IndexController.prototype.initVisual = function() {
         $select.append(options);
     }();
 
-    // テキストラベルのCSSを統一する。
-    $('#title-label').css('width', $('#title-edit').css('width'));
-    $('#title-label').css('height', $('#title-edit').css('height'));
-    $('#title-label').css('padding', $('#title-edit').css('padding'));
-    $('#title-label').css('font-size', $('#title-edit').css('font-size'));
-    $('#title-label').css('line-height', $('#title-edit').css('line-height'));
-    $('#title-label').css('color', $('#title-edit').css('color'));
-
     this.editor = ace.edit("ace_editor");
     this.editor.setFontSize(14);
     // this.editor.resize(true);
@@ -231,7 +223,7 @@ IndexController.prototype.initEvent = function() {
         controller.editor.selection.moveCursorLeft();
         controller.editor.focus();
 
-        $('#title-label').text($(this).find('option:selected').text());
+        $('#title-edit').val($(this).find('option:selected').text());
         $('#header #description').text('Note changed!');
     });
     $('#target-note').change();
@@ -255,20 +247,8 @@ IndexController.prototype.initEvent = function() {
         controller.setEventAfterDraw();
     });
 
-    // テキストラベルのチェンジイベント
-    $('#title-label').click(function() {
-        $('#title-label').css( 'display', 'none');
-        $('#title-edit')
-            .val( $( '#title-label').text())
-            .css( 'display', '')
-            .focus();
-    });
+    // タイトル変更イベント
     $('#title-edit').blur(function() {
-        $('#title-edit').css('display', 'none');
-        $('#title-label')
-            .text($('#title-edit').val())
-            .css('display', '');
-
         // タイトルをセレクトボックスORストレージに登録する
         var targetNum = parseInt($('#target-note').val());
         var titles = {};
@@ -304,7 +284,7 @@ IndexController.prototype.initEvent = function() {
         fileReader.onload = function(fileLoadedEvent){
             console.log(fileLoadedEvent);
             var textFromFileLoaded = fileLoadedEvent.target.result;
-            $('#title-label').text(textFromFileLoaded);
+            $('#title-edit').text(textFromFileLoaded);
         };
 
         var blob = new Blob([this[0]], { type: "text/plain" });
