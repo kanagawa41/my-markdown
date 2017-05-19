@@ -204,13 +204,13 @@ IndexController.prototype.initEvent = function() {
 
         var startLine = selectionRange.start.row;
         var endLine = selectionRange.end.row;
-// console.log(startLine);
-// console.log(endLine);
 
         $('#sidebar-area .my_row').each(function(i, content){
+            var rowNumber = $(this).attr('id').split('_')[1];
+
             $(this).removeClass('none-selected');
 
-            if(i >= startLine && i < endLine){
+            if(rowNumber >= startLine && rowNumber < endLine){
                 $(this).addClass('selected');
             } else {
                 $(this).addClass('none-selected');
