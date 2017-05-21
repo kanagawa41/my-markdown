@@ -35,9 +35,14 @@
             line-height: 3rem;
             height: 3rem;
             border: solid 1px #E8E8E8; }
-                #area-title #making-title-wrapper .title a{
-                    color: #c7c7c7; }
+            #area-title #making-title-wrapper .title a {
+                color: #c7c7c7; }
+                #area-title #making-title-wrapper .title a.last-icon {
+                    /* FIXME: 下記をかけるとEDITが→に移動してしまう。 */
+                    /*float: right;*/
+                    padding-right: 1rem; }
             #area-title #making-title-wrapper #target-note {
+                width: 230px;
                 height: 99%;
                 border: none;
                 /*float: right;*/ }
@@ -49,9 +54,9 @@
             line-height: 3rem;
             height: 3rem;
             border: solid 1px #E8E8E8; }
-                #area-title #visual-title-wrapper .title a{
+                #area-title #visual-title-wrapper .title a {
                     color: #c7c7c7; }
-                #area-title #visual-title-wrapper .title .full-size-mark{
+                #area-title #visual-title-wrapper .title .full-size-mark {
                     color: #09c;
                     font-size: 2.8rem;
                     cursor: pointer; }
