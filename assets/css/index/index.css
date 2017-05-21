@@ -173,6 +173,10 @@
     #variables-modal table tr.row-var td {
         text-align: right; }
 
+#simbol-list-modal .on-scroll{
+    overflow: auto; 
+    max-height: 500px; }
+
 /* オーバーレイの実装 */
 /* [参考](http://coliss.com/articles/build-websites/operation/css/css-centering-in-the-unknown-by-css-tricks.html) */
 #overlay{
