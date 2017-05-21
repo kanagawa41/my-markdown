@@ -152,7 +152,7 @@ IndexController.prototype.initEvent = function() {
     var contentOld = null;
     var keyUptimer = false;
     this.editor.session.on('change', function(){
-        controller.outputMessage('In the input...', false);
+        controller.outputMessage('In the input...');
 
         if (keyUptimer !== false) {
             clearTimeout(keyUptimer);
@@ -173,10 +173,10 @@ IndexController.prototype.initEvent = function() {
                 store.set(Enum.STOREKEY.DOCUMENTS, tempDocs);
                 store.set(Enum.STOREKEY.SELECT_DOCUMENT, targetNum);
 
-                controller.outputMessage('Saved!', true);
+                controller.outputMessage('Saved!');
             } else {
                 // 本当はセーブしていないが内容が変わらないので整合性はある。　
-                controller.outputMessage('Saved!', true);
+                controller.outputMessage('Saved!');
             }
 
             $('#target-note').prop('disabled', false);
@@ -219,7 +219,7 @@ IndexController.prototype.initEvent = function() {
         controller.editor.focus();
 
         $('#title-edit').val($(this).find('option:selected').text());
-        controller.outputMessage('Note changed!', true);
+        controller.outputMessage('Note changed!');
     });
     $('#target-note').change();
 
@@ -260,7 +260,7 @@ IndexController.prototype.initEvent = function() {
         });
 
         store.set(Enum.STOREKEY.DOCUMENT_TITLES, titles);
-        controller.outputMessage('Title saved!', true);
+        controller.outputMessage('Title saved!');
     });
 
     // TODO: アップロードしたJSONファイルを読み込みローカルストレージニ保持する。
@@ -344,17 +344,11 @@ IndexController.prototype.messageFadetimer = false;
 /**
  * イベントメッセージの表示制御を行う。
  */
-IndexController.prototype.outputMessage = function(message, fadeFlag) {
+IndexController.prototype.outputMessage = function(message) {
     var controller = this;
 
     $('#header #description').css('display', 'block');
     $('#header #description').text(message);
-
-    // フェードをしない
-    if(!fadeFlag){ 
-        clearTimeout(controller.messageFadetimer);
-        return;
-    }
 
     if (controller.messageFadetimer !== false) {
         clearTimeout(controller.messageFadetimer);
@@ -417,7 +411,7 @@ IndexController.prototype.addNote = function() {
     controller.createTitlebox(titles, selected);
     $('#title-edit').val($('#target-note').find('option:selected').text());
 
-    controller.outputMessage('Add a note!', true);
+    controller.outputMessage('Add a note!');
 }
 
 /**
@@ -428,7 +422,7 @@ IndexController.prototype.removeNote = function() {
 
     // 最後のノート
     if($('#target-note').children().length == 1){
-        controller.outputMessage('Can\'t remove a note!', true);
+        controller.outputMessage('Can\'t remove a note!');
         return;
     }
 
@@ -471,7 +465,7 @@ IndexController.prototype.removeNote = function() {
     $('#title-edit').val($(nextTarget).text());
     $(nextTarget).prop('selected', true);
 
-    controller.outputMessage('Remove a note!', true);
+    controller.outputMessage('Remove a note!');
 }
 
 /**
