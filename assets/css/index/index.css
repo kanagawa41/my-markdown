@@ -29,7 +29,7 @@
     width: 100%; }
     #area-title #making-title-wrapper {
         float:left;
-        width: 50%; } 
+        width: 45%; } 
             #area-title #making-title-wrapper .title {
             padding-left: 1rem;
             line-height: 3rem;
@@ -51,12 +51,14 @@
                 /*float: right;*/ }
     #area-title #visual-title-wrapper {
         float:left;
-        width: 50%; }
+        width: 55%; }
             #area-title #visual-title-wrapper .title {
             padding-left: 1rem;
             line-height: 3rem;
             height: 3rem;
             border: solid 1px #E8E8E8; }
+                #area-title #visual-title-wrapper.full {
+                    width: 100%; }
                 #area-title #visual-title-wrapper .title a {
                     font-size: 1.3rem;
                     color: #c7c7c7; }
@@ -69,6 +71,7 @@
 
 /* 記載部 */
 #making-area {
+    width: 45%;
     float:left; }
 
 #visual-area {
@@ -77,11 +80,13 @@
     overflow: scroll;
     overflow-x: hidden;
     overflow-y: scroll;
-    font-family: Arial,"Helvetica Neue",Helvetica,sans-serif; 
+    width: 55%;
     border-left-width: 1px;
     border-style: solid;
     border-color: #E8E8E8;
-    }
+    font-family: Arial,"Helvetica Neue",Helvetica,sans-serif; }
+        #visual-area.full {
+            width: 100%; }
 
 #main-area {
     width: 95%;

@@ -143,9 +143,6 @@ IndexController.prototype.createTitlebox = function(characters, targetNum) {
 };
 
 IndexController.prototype.resize = function() {
-    $('#making-area').width(this.partsWidth);
-    $('#visual-area').width(this.partsWidth - 1); // ボーダー線の調整分
-
     // 高さに影響を与える要素ができた場合、それを引くようにする
     $('#making-area #ace_editor').height(this.windowHeight);
     $('#visual-area').height(this.windowHeight);
@@ -235,13 +232,15 @@ IndexController.prototype.initEvent = function() {
     // ヴィジュアルエリアの拡大
     $('.glyphicon-resize-full').on('click', function() {
         if($('#visual-title-wrapper').hasClass('full')){
-            $('#visual-title-wrapper').width(controller.partsWidth);
-            $('#visual-area').width(controller.partsWidth - 1); // ボーダー線の調整分
+            // $('#visual-title-wrapper').width('55%');
+            // $('#visual-area').width('55%'); // ボーダー線の調整分
             $('#visual-title-wrapper').removeClass('full');
+            $('#visual-area').removeClass('full');
         } else {
-            $('#visual-title-wrapper').width($(window).width());
-            $('#visual-area').width($(window).width());
+            // $('#visual-title-wrapper').width($(window).width());
+            // $('#visual-area').width($(window).width());
             $('#visual-title-wrapper').addClass('full');
+            $('#visual-area').addClass('full');
         }
 
         $('#making-title-wrapper').toggle();
