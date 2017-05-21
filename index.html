@@ -195,7 +195,7 @@
 
     <!-- オーバーレイ -->
     <div id="overlay">
-        <div class="content">TASKMARK</p>
+        <a href="#" data-toggle="tooltip" title="起動しない場合はクリック" onclick="indexController.resetSetting();"><div class="content">TASKMARK</div></a>
     </div>
 
     <!-- Scripts -->
@@ -208,38 +208,6 @@
     <script type="text/javascript" src="assets/vandor/ace/js/ace.js"></script>
 
     <script type="text/javascript">
-      // AJAXのリクエストパラメータのひな形
-      var getBasicAjaxRequest = function(){
-        return {
-          type: 'GET',
-          url: '',
-          crossDomain: true,
-          timeout: 10000,
-          cache: false,
-          data: {},
-          crossDomain: true,
-          headers: {
-            'Content-Type' : 'application/x-www-form-urlencoded; charset=UTF-8'
-          },
-          beforeSend: function(jqXHR, settings) {
-            jqXHR.requestURL = settings.url;
-            // 指定のサーバーへ切り替える
-            settings.url = config.api_domain + '/' + settings.url;
-            return true;
-          },
-        };
-      }
-
-      // AJAXの接続失敗の処理
-      var AJAX_FAIL = function(XMLHttpRequest, textStatus, errorThrown ) {
-          console.log("接続が正しく行われませんでした。", "システムエラー");
-
-          console.log("URL : " + XMLHttpRequest.requestURL);
-          console.log("XMLHttpRequest : " + XMLHttpRequest.responseText);
-          console.log("textStatus : " + textStatus);
-          console.log("errorThrown : " + errorThrown);
-      };
-
       var indexController;
 
       $(document).ready(function(){
@@ -248,23 +216,6 @@
 
         $('[data-toggle="tooltip"]').tooltip();
       });
-
-      /**
-       * AJAXサンプル
-       */
-      function sample(){
-        var ajaxRequest = getBasicAjaxRequest();
-        ajaxRequest['type'] = 'POST';
-        ajaxRequest['url'] = 'sample/sample2';
-        ajaxRequest['data'] = {
-              sample : 'sample',
-        };
-
-        $.ajax(ajaxRequest
-        ).done(function(response, textStatus, jqXHR) {
-          // 通信成功処理
-        }).fail(AJAX_FAIL);
-      }
     </script>
   </body>
 </html>
