@@ -64,6 +64,17 @@ IndexController.prototype.initLocalstrage = function() {
         store.set(Enum.STOREKEY.DOCUMENT_TITLES, {0: Enum.CONFIG.DEFAULT_TITLE});
         store.set(Enum.STOREKEY.DOCUMENTS, {0: ""});
         store.set(Enum.STOREKEY.SELECT_DOCUMENT, 0);
+        var datas = [];
+        $('#variables-modal .row-var').each(function(i, content){
+            var variable = {};
+            variable['variable-name'] = $(this).find('[name="variable-name"]').val();
+            variable['variable-value'] = $(this).find('[name="variable-value"]').val();
+            variable['variable-supplement'] = $(this).find('[name="variable-supplement"]').val();
+            datas.push(variable);
+        });
+
+        store.set(Enum.STOREKEY.VARIABLES, datas);
+
     }
 }
 
@@ -104,8 +115,6 @@ IndexController.prototype.initVisual = function() {
             $(this).find('[name="variable-value"]').val(variable['variable-value']);
             $(this).find('[name="variable-supplement"]').val(variable['variable-supplement']);
         });
-    } else {
-        this.saveVaiable(); // 初期化
     }
 
     // 値を入れることにより選択状態になるため解除
@@ -383,6 +392,8 @@ IndexController.prototype.exportData = function() {
  * 指定のJSONファイルのデータをローカルストレージにインポートする。
  */
 IndexController.prototype.importData = function() {
+    alert('作成中ですm(_ _)m');
+    return;
     $('#fileupload').click();
 }
 
