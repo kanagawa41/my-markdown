@@ -108,7 +108,7 @@
             #main-area .my_row .my-mark { /* タスクマーク */
                 float: left;
                 padding-right: 5px;
-                line-height: 3rem; }
+                line-height: 2.5rem; }
             #main-area .my_row .my-content { /* タスク内容 */
                 /*float: left;*/
                 line-height: 3rem; }

@@ -473,6 +473,23 @@ IndexController.prototype.addNote = function() {
     controller.outputMessage('Add a note!');
 }
 
+
+/**
+ * TODO: 作成
+ * 指定された行をタスク済にする。
+ */
+IndexController.prototype.checkeTask = function(index) {
+    alert('タスク済にしたい。。。。');
+}
+
+/**
+ * TODO: 作成
+ * 指定された行をタスク未にする。
+ */
+IndexController.prototype.unCheckeTask = function(index) {
+    alert('タスク未にしたい。。。。');
+}
+
 /**
  * ノートを削除する。
  */
@@ -862,7 +879,7 @@ IndexController.prototype.createTaskHtml = function(element) {
     var htmlChar = '';
     htmlChar += '<div id="row-' + index + '" class="my_row ' + symbol + ' focusout">';
     htmlChar += ' <div class="my-indent" style="margin-left:' + indent + 'em;">';
-    htmlChar += '  <span class="my-mark ' + markIcon + '"></span>';
+    htmlChar += '  <span class="my-mark ' + markIcon + '" onclick="indexController.checkeTask(' + index + ');"></span>';
     htmlChar += '  <div class="my-content char-font">' + content + '</div>';
     htmlChar += ' </div>';      
     htmlChar += '</div>';
@@ -885,7 +902,7 @@ IndexController.prototype.createDoneHtml = function(element) {
     var htmlChar = '';
     htmlChar += '<div id="row-' + index + '" class="my_row ' + symbol + ' focusout">';
     htmlChar += ' <div class="my-indent" style="margin-left:' + indent + 'em;">';
-    htmlChar += '  <span class="my-mark ' + markIcon + '"></span>';
+    htmlChar += '  <span class="my-mark ' + markIcon + '" onclick="indexController.unCheckeTask(' + index + ');"></span>';
     htmlChar += '  <div class="my-content char-font">' + content + '</div>';
     htmlChar += ' </div>';      
     htmlChar += '</div>';       
