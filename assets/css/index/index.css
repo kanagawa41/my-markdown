@@ -7,13 +7,13 @@
     color: #09c; }
     #header .title {
         float: left;
-        width: 8%;
+        padding-right: 1rem;
         font-size: 2rem;
         height: 2.5em;
         line-height: 2.5em; }
     #header .output {
         float: left;
-        width: 80%; }
+        width: 70%; }
     #header #title-edit {
         border: none;}
 
@@ -36,9 +36,12 @@
             height: 3rem;
             border: solid 1px #E8E8E8; }
             #area-title #making-title-wrapper .title a {
+                padding: 0 7px 0 7px;
                 font-size: 1.3rem;
                 color: #c7c7c7; }
             #area-title #making-title-wrapper .title a:hover {
+                /* FIXME: ホバー時にアイコン大きくしたいが列毎ぶれる */
+                /*font-size: 1.7rem;*/
                 color: #333333; }
                 #area-title #making-title-wrapper .title a.last-icon {
                     /* FIXME: 下記をかけるとEDITが→に移動してしまう。 */
@@ -46,7 +49,7 @@
                     /*padding-right: 1rem;*/ }
             #area-title #making-title-wrapper #target-note {
                 width: 230px;
-                height: 99%;
+                height: 90%;
                 border: none;
                 /*float: right;*/ }
     #area-title #visual-title-wrapper {
@@ -60,9 +63,12 @@
                 #area-title #visual-title-wrapper.full {
                     width: 100%; }
                 #area-title #visual-title-wrapper .title a {
+                    padding: 0 7px 0 7px;
                     font-size: 1.3rem;
                     color: #c7c7c7; }
                 #area-title #visual-title-wrapper .title a:hover {
+                    /* FIXME: ホバー時にアイコン大きくしたいが列毎ぶれる */
+                    /*font-size: 1.7rem;*/
                     color: #333333; }
                 #area-title #visual-title-wrapper .title .full-size-mark {
                     color: #09c;
