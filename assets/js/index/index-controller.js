@@ -280,26 +280,30 @@ IndexController.prototype.initEvent = function() {
         controller.outputMessage('Title saved!');
     });
 
-    // TODO: アップロードしたJSONファイルを読み込みローカルストレージニ保持する。
     // ファイルアップロードイベント
     $("#fileupload").on('change', function() {
-        if(this.length == 0){ 
+        var input = $('#fileupload').get(0);
+        if(input.files.length == 0){ 
             console.log('No selected file!');
             return;
         } else {
             console.log('Selected file!');
         }
 
-        console.log(this.length);
-        
         var fileReader = new FileReader();
         fileReader.onload = function(fileLoadedEvent){
-            console.log(fileLoadedEvent);
-            var textFromFileLoaded = fileLoadedEvent.target.result;
-            $('#title-edit').text(textFromFileLoaded);
+            var importDatas = JSON.parse(fileReader.result);
+
+            // インポートしたデータを設定
+            store.set(Enum.STOREKEY.DOCUMENT_TITLES, importDatas["DOCUMENT_TITLES"]),
+            store.set(Enum.STOREKEY.DOCUMENTS, importDatas["DOCUMENTS"]),
+            store.set(Enum.STOREKEY.SELECT_DOCUMENT, importDatas["SELECT_DOCUMENT"]),
+            store.set(Enum.STOREKEY.VARIABLES, importDatas["VARIABLES"]),
+
+            location.reload();
         };
 
-        var blob = new Blob([this[0]], { type: "text/plain" });
+        var blob = new Blob([input.files[0]], { type: "text/plain" });
         fileReader.readAsText(blob, "UTF-8");
     });
 
@@ -396,12 +400,9 @@ IndexController.prototype.exportData = function() {
 }
 
 /**
- * TODO まだ実装できていない。
  * 指定のJSONファイルのデータをローカルストレージにインポートする。
  */
 IndexController.prototype.importData = function() {
-    alert('作成中ですm(_ _)m');
-    return;
     $('#fileupload').click();
 }
 
