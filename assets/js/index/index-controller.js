@@ -64,17 +64,14 @@ IndexController.prototype.initLocalstrage = function() {
         store.set(Enum.STOREKEY.DOCUMENT_TITLES, {0: Enum.CONFIG.DEFAULT_TITLE});
         store.set(Enum.STOREKEY.DOCUMENTS, {0: ""});
         store.set(Enum.STOREKEY.SELECT_DOCUMENT, 0);
+
         var datas = [];
-        $('#variables-modal .row-var').each(function(i, content){
-            var variable = {};
-            variable['variable-name'] = $(this).find('[name="variable-name"]').val();
-            variable['variable-value'] = $(this).find('[name="variable-value"]').val();
-            variable['variable-supplement'] = $(this).find('[name="variable-supplement"]').val();
-            datas.push(variable);
-        });
-
+        var variable = {};
+        variable['variable-name'] = $(this).find('[name="variable-name"]').val();
+        variable['variable-value'] = $(this).find('[name="variable-value"]').val();
+        variable['variable-supplement'] = $(this).find('[name="variable-supplement"]').val();
+        datas.push(variable);
         store.set(Enum.STOREKEY.VARIABLES, datas);
-
     }
 }
 
@@ -94,6 +91,10 @@ IndexController.prototype.initVisual = function() {
     // コンボボックスの作成
     this.createTitlebox(store.get(Enum.STOREKEY.DOCUMENT_TITLES), store.get(Enum.STOREKEY.SELECT_DOCUMENT));
 
+    var variables = store.get(Enum.STOREKEY.VARIABLES);
+    this.createVariableTable(variables);
+
+    // エディタの設定
     this.editor = ace.edit("ace_editor");
     this.editor.setFontSize(14);
     // this.editor.resize(true);
@@ -140,6 +141,45 @@ IndexController.prototype.createTitlebox = function(characters, targetNum) {
     });
 
     $select.append(options);
+};
+
+/**
+ * 変数項目を作成
+ */
+IndexController.prototype.createVariableTable = function(variables) {
+    var table = $('#variables-modal table');
+
+    var trs = '';
+    trs += '<tr>';
+    trs += ' <td></td><td>変数名</td><td>値</td><td>備考</td>';
+    trs += '</tr>';
+
+    var firstFlag = true;
+    $(variables).each(function(i, content){
+        var variable = variables[i];
+
+        var tr = '';
+        tr += '<tr class="row-var">';
+        // 一行目のアイコンはあらかじめ削除しておく。
+        if(firstFlag){
+            tr += ' <td>　</td>';
+            firstFlag = false;
+        } else {
+            tr += ' <td><a href="#" data-toggle="tooltip" title="変数を削除"><span class="glyphicon glyphicon-minus-sign" onclick="indexController.removeVariable(this);"></span></a></td>';
+        }
+        tr += ' <td><input type="input" name="variable-name" value="' + variable['variable-name'] + '"></td>';
+        tr += ' <td><input type="input" name="variable-value" value="' + variable['variable-value'] + '"></td>';
+        tr += ' <td><input type="input" name="variable-supplement" value="' + variable['variable-supplement'] + '"></td>';
+        tr += '</tr>';
+
+        trs += tr;
+    });
+
+    trs += '<tr class="row-last-var">';
+    trs += ' <td colspan="4"><a href="#" data-toggle="tooltip" title="変数を追加"><span class="glyphicon glyphicon-plus-sign" onclick="indexController.addVariable();"></span></a></td>';
+    trs += '</tr>';
+
+    table.html(trs);
 };
 
 IndexController.prototype.resize = function() {
@@ -191,7 +231,6 @@ IndexController.prototype.initEvent = function() {
         }, 2000); // 値を変更すると反映の間隔を変更できる
     });
 
-    // TODO：セレクトされたときにビジュアルも色をつける
     controller.editor.selection.on("changeSelection", function(){
         var selectionRange = controller.editor.getSelectionRange();
 
@@ -503,6 +542,31 @@ IndexController.prototype.resetSetting = function() {
 
     // 画面初期化
     location.reload();
+}
+
+
+/**
+ * 変数列を削除する。
+ */
+IndexController.prototype.removeVariable = function(row) {
+    $(row).parent().parent().parent().remove();
+}
+
+/**
+ * 変数列を追加する。
+ */
+IndexController.prototype.addVariable = function() {
+    var lastRow = $('#variables-modal table .row-last-var');
+
+    var tr = '';
+    tr += '<tr class="row-var">';
+    tr += ' <td><a href="#" data-toggle="tooltip" title="変数を削除"><span class="glyphicon glyphicon-minus-sign" onclick="indexController.removeVariable(this);"></span></a></td>';
+    tr += ' <td><input type="input" name="variable-name" value=""></td>';
+    tr += ' <td><input type="input" name="variable-value" value=""></td>';
+    tr += ' <td><input type="input" name="variable-supplement" value=""></td>';
+    tr += '</tr>';
+
+    lastRow.before(tr);
 }
 
 /**
@@ -1063,16 +1127,18 @@ IndexController.prototype.toElement = function(content, variables) {
         regexp = new RegExp('^[' + Enum.SPECIAL_MARK.FOLD_AREA + ']', 'g');
         temp = temp.replace(regexp, '');
 
-        regexp = new RegExp('｛.+｝', 'g');
+        regexp = new RegExp('｛.+?｝', 'g');
         // 変数があるか確認
-        var valiableName = temp.match(regexp);
-        if(valiableName != null) {
+        var valiableNames = temp.match(regexp);
+        if(valiableNames != null) {
             // 変数の展開
             temp = function(content){
-                variables.forEach(function(variable) {
-                    var value = variable['variable-name'] == valiableName[0].replace(/[｛｝]/g, '') ? variable['variable-value'] : null;
-                    if(value == null) { return true; }
-                    content = content.replace(valiableName, value);
+                $(valiableNames).each(function(i, valiableName) {
+                    $(variables).each(function(i, variable) {
+                        var value = variable['variable-name'] == valiableName.replace(/[｛｝]/g, '') ? variable['variable-value'] : null;
+                        if(value == null) { return true; }
+                        content = content.replace(valiableName, value);
+                    });
                 });
                 return content;
             }(temp);
