@@ -150,9 +150,11 @@ IndexController.prototype.createVariableTable = function(variables) {
     var table = $('#variables-modal table');
 
     var trs = '';
-    trs += '<tr>';
-    trs += ' <td></td><td>変数名</td><td>値</td><td>備考</td>';
-    trs += '</tr>';
+    trs += '<thead>';
+    trs += ' <tr>';
+    trs += '  <td></td><td>変数名</td><td>値</td><td>備考</td>';
+    trs += ' </tr>';
+    trs += '</thead>';
 
     var firstFlag = true;
     $(variables).each(function(i, content){
@@ -167,9 +169,9 @@ IndexController.prototype.createVariableTable = function(variables) {
         } else {
             tr += ' <td><a href="#" data-toggle="tooltip" title="変数を削除"><span class="glyphicon glyphicon-minus-sign" onclick="indexController.removeVariable(this);"></span></a></td>';
         }
-        tr += ' <td><input type="input" name="variable-name" value="' + variable['variable-name'] + '"></td>';
-        tr += ' <td><input type="input" name="variable-value" value="' + variable['variable-value'] + '"></td>';
-        tr += ' <td><input type="input" name="variable-supplement" value="' + variable['variable-supplement'] + '"></td>';
+        tr += ' <td><input type="input" name="variable-name" class="form-control" value="' + variable['variable-name'] + '"></td>';
+        tr += ' <td><input type="input" name="variable-value" class="form-control" value="' + variable['variable-value'] + '"></td>';
+        tr += ' <td><input type="input" name="variable-supplement" class="form-control" value="' + variable['variable-supplement'] + '"></td>';
         tr += '</tr>';
 
         trs += tr;
@@ -475,19 +477,31 @@ IndexController.prototype.addNote = function() {
 
 
 /**
- * TODO: 作成
  * 指定された行をタスク済にする。
  */
 IndexController.prototype.checkeTask = function(index) {
-    alert('タスク済にしたい。。。。');
+    var controller = this;
+    var lineText = controller.editor.session.getLine(index);
+    var indent = lineText.match(new RegExp('^([\s　]*)', 'g'));
+    var newText = lineText.replace(new RegExp('^[\s　]*[' + Enum.MARK.TASK + ']', 'g'), Enum.MARK.DONE);
+    controller.editor.session.replace(new controller.Range(index, 0, index, Number.MAX_VALUE), indent[0] + newText);
+
+    $('#main-area #row-' + index + ' .my-mark').removeClass('glyphicon-unchecked');
+    $('#main-area #row-' + index + ' .my-mark').addClass('glyphicon-check');
 }
 
 /**
- * TODO: 作成
  * 指定された行をタスク未にする。
  */
 IndexController.prototype.unCheckeTask = function(index) {
-    alert('タスク未にしたい。。。。');
+    var controller = this;
+    var lineText = controller.editor.session.getLine(index);
+    var indent = lineText.match(new RegExp('^([\s　]*)', 'g'));
+    var newText = lineText.replace(new RegExp('^[\s　]*[' + Enum.MARK.DONE + ']', 'g'), Enum.MARK.TASK);
+    controller.editor.session.replace(new controller.Range(index, 0, index, Number.MAX_VALUE), indent[0] + newText);
+
+    $('#main-area #row-' + index + ' .my-mark').removeClass('glyphicon-check');
+    $('#main-area #row-' + index + ' .my-mark').addClass('glyphicon-unchecked');
 }
 
 /**
@@ -578,9 +592,9 @@ IndexController.prototype.addVariable = function() {
     var tr = '';
     tr += '<tr class="row-var">';
     tr += ' <td><a href="#" data-toggle="tooltip" title="変数を削除"><span class="glyphicon glyphicon-minus-sign" onclick="indexController.removeVariable(this);"></span></a></td>';
-    tr += ' <td><input type="input" name="variable-name" value=""></td>';
-    tr += ' <td><input type="input" name="variable-value" value=""></td>';
-    tr += ' <td><input type="input" name="variable-supplement" value=""></td>';
+    tr += ' <td><input type="input" name="variable-name" class="form-control" value=""></td>';
+    tr += ' <td><input type="input" name="variable-value" class="form-control" value=""></td>';
+    tr += ' <td><input type="input" name="variable-supplement" class="form-control" value=""></td>';
     tr += '</tr>';
 
     lastRow.before(tr);
@@ -1128,7 +1142,7 @@ IndexController.prototype.toElement = function(content, variables) {
     //インデント(全角半角)
     regexp = new RegExp('^' + Enum.CONFIG.INDENT_MARK + '+', 'g');
     temp = content.match(regexp);
-    element[IndexController.ELEMENT.INDENT] = temp != null ? temp[0].length : 0;
+    element[IndexController.ELEMENT.INDENT] = temp != null ? (temp[0].length　* Enum.CONFIG.INDENT_WIDTH) : 0; // 文字の大きさに対して調整が必要
 
     //記載内容
     element[IndexController.ELEMENT.CONTENT] = function(content){

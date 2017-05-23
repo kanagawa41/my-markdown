@@ -108,7 +108,8 @@
             #main-area .my_row .my-mark { /* タスクマーク */
                 float: left;
                 padding-right: 5px;
-                line-height: 2.5rem; }
+                line-height: 2.5rem;
+                font-size: 1.9rem; }
             #main-area .my_row .my-content { /* タスク内容 */
                 /*float: left;*/
                 line-height: 3rem; }
@@ -190,10 +191,12 @@
     color: #09c;
 }
 
-#variables-modal table tr td {
-    border: solid 1px #E8E8E8; }
+#variables-modal table {
+    border: none; }
     #variables-modal table tr.row-var td {
         text-align: right; }
+        #variables-modal table tr.row-var td input{
+            border: none; }
 
 #simbol-list-modal .on-scroll{
     overflow: auto; 
