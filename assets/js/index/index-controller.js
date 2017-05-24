@@ -43,6 +43,11 @@ IndexController.FOLD_AREA_ELEMENT = {
  * 初期処理
  */
 IndexController.prototype.init = function() {
+    var controller = this;
+    // メーキングのコードをビジュアルに落とし込むスピード
+    // 処理ごとに変更させる時間を変更する
+    controller.changeVisualSpeed = Enum.CONFIG.CHANGE_VISUAL_DEFALT_SPEED;
+
     this.initLocalstrage();
     this.initVisual();
     this.initEvent();
@@ -230,14 +235,14 @@ IndexController.prototype.initEvent = function() {
             $('#target-note').prop('disabled', false);
             clearTimeout(keyUptimer);
             keyUptimer = false;
-        }, 2000); // 値を変更すると反映の間隔を変更できる
+        }, controller.changeVisualSpeed); // 値を変更すると反映の間隔を変更できる
     });
 
     controller.editor.selection.on("changeSelection", function(){
         var selectionRange = controller.editor.getSelectionRange();
 
         var startLine = selectionRange.start.row;
-        var endLine = selectionRange.end.row;
+        var endLine = selectionRange.end.row; // 調整が必要
 
         $('#sidebar-area .my_row').each(function(i, content){
             var rowNumber = $(this).attr('id').split('row-')[1];
@@ -254,6 +259,7 @@ IndexController.prototype.initEvent = function() {
 
     // セレクトボックスを変更した場合
     $('#target-note').on('change', function(){
+        controller.changeVisualSpeed = 500;
         store.set(Enum.STOREKEY.SELECT_DOCUMENT, $(this).val());
 
         var docs = store.get(Enum.STOREKEY.DOCUMENTS);
@@ -266,6 +272,8 @@ IndexController.prototype.initEvent = function() {
         controller.editor.focus();
 
         $('#title-edit').val($(this).find('option:selected').text());
+
+        controller.changeVisualSpeed = Enum.CONFIG.CHANGE_VISUAL_DEFALT_SPEED;
         controller.outputMessage('Note changed!');
     });
     $('#target-note').change();
@@ -435,7 +443,7 @@ IndexController.prototype.exportData = function() {
      
     var data = JSON.stringify(tasks);
     var a = document.getElementById('export-link');
-    a.download = 'tasks.json';
+    a.download = 'taskmark-settings.json';
     a.href = window.URL.createObjectURL(new Blob([data], { type: 'text/plain' }));
     a.dataset.downloadurl = ['text/plain', a.download, a.href].join(':');
 }
@@ -452,6 +460,8 @@ IndexController.prototype.importData = function() {
  */
 IndexController.prototype.addNote = function() {
     var controller = this;
+
+    controller.changeVisualSpeed = 500;
 
     var documents = store.get(Enum.STOREKEY.DOCUMENTS);
     var titles = store.get(Enum.STOREKEY.DOCUMENT_TITLES);
@@ -472,6 +482,7 @@ IndexController.prototype.addNote = function() {
     controller.createTitlebox(titles, selected);
     $('#title-edit').val($('#target-note').find('option:selected').text());
 
+    controller.changeVisualSpeed = Enum.CONFIG.CHANGE_VISUAL_DEFALT_SPEED;
     controller.outputMessage('Add a note!');
 }
 
@@ -481,13 +492,14 @@ IndexController.prototype.addNote = function() {
  */
 IndexController.prototype.checkeTask = function(index) {
     var controller = this;
+    controller.changeVisualSpeed = 500;
+
     var lineText = controller.editor.session.getLine(index);
     var indent = lineText.match(new RegExp('^([\s　]*)', 'g'));
     var newText = lineText.replace(new RegExp('^[\s　]*[' + Enum.MARK.TASK + ']', 'g'), Enum.MARK.DONE);
     controller.editor.session.replace(new controller.Range(index, 0, index, Number.MAX_VALUE), indent[0] + newText);
 
-    $('#main-area #row-' + index + ' .my-mark').removeClass('glyphicon-unchecked');
-    $('#main-area #row-' + index + ' .my-mark').addClass('glyphicon-check');
+    controller.changeVisualSpeed = Enum.CONFIG.CHANGE_VISUAL_DEFALT_SPEED;
 }
 
 /**
@@ -495,13 +507,14 @@ IndexController.prototype.checkeTask = function(index) {
  */
 IndexController.prototype.unCheckeTask = function(index) {
     var controller = this;
+    controller.changeVisualSpeed = 500;
+
     var lineText = controller.editor.session.getLine(index);
     var indent = lineText.match(new RegExp('^([\s　]*)', 'g'));
     var newText = lineText.replace(new RegExp('^[\s　]*[' + Enum.MARK.DONE + ']', 'g'), Enum.MARK.TASK);
     controller.editor.session.replace(new controller.Range(index, 0, index, Number.MAX_VALUE), indent[0] + newText);
 
-    $('#main-area #row-' + index + ' .my-mark').removeClass('glyphicon-check');
-    $('#main-area #row-' + index + ' .my-mark').addClass('glyphicon-unchecked');
+    controller.changeVisualSpeed = Enum.CONFIG.CHANGE_VISUAL_DEFALT_SPEED;
 }
 
 /**
@@ -509,6 +522,7 @@ IndexController.prototype.unCheckeTask = function(index) {
  */
 IndexController.prototype.removeNote = function() {
     var controller = this;
+    controller.changeVisualSpeed = 500;
 
     // 最後のノート
     if($('#target-note').children().length == 1){
@@ -517,6 +531,7 @@ IndexController.prototype.removeNote = function() {
     }
 
     if(!confirm('ノートを削除しますか？')){
+        controller.changeVisualSpeed = Enum.CONFIG.CHANGE_VISUAL_DEFALT_SPEED;
         return false;
     }
 
@@ -555,6 +570,7 @@ IndexController.prototype.removeNote = function() {
     $('#title-edit').val($(nextTarget).text());
     $(nextTarget).prop('selected', true);
 
+    controller.changeVisualSpeed = Enum.CONFIG.CHANGE_VISUAL_DEFALT_SPEED;
     controller.outputMessage('Remove a note!');
 }
 
