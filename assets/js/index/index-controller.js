@@ -86,7 +86,6 @@ IndexController.prototype.initLocalstrage = function() {
 IndexController.prototype.initVisual = function() {    
     var controller = this;
 
-    this.partsWidth = Math.floor($(window).width() / 2);
     this.windowHeight = Math.floor($(window).height())
         - Math.floor($('#page-wrapper').height())
         - Math.floor($('#making-title-wrapper').height());
@@ -128,6 +127,51 @@ IndexController.prototype.initVisual = function() {
     this.editor.selection.moveCursorRight();
     this.editor.selection.moveCursorLeft();
     this.editor.focus();
+
+    var $fm = $.floatingMenu({
+        selector: '.icon-more',
+        items: [
+            {
+                title : '変数',
+                action : function(event) {
+                    $('#variables-modal').modal('show');
+                },
+                close : true,
+                // icon : '',
+                // blank : true,
+            },
+            {
+                title : 'エクスポート',
+                action : function(event) {
+                    indexController.exportData();
+                },
+                close : false,
+            },
+            {
+                title : 'インポート',
+                action : function(event) {
+                    indexController.importData();
+                },
+                close : true,
+            },
+            {
+                title : '設定リセット',
+                action : function(event) {
+                    indexController.resetSetting();
+                },
+                close : true,
+            },
+            {
+                title : '使い方',
+                action : function(event) {
+                    $('#simbol-list-modal').modal('show');
+                },
+                close : true,
+            },
+        ]
+    });
+    // $fm.on('afterShow', function(event){
+    // });
 }
 
 /**
@@ -446,6 +490,9 @@ IndexController.prototype.exportData = function() {
     a.download = 'taskmark-settings.json';
     a.href = window.URL.createObjectURL(new Blob([data], { type: 'text/plain' }));
     a.dataset.downloadurl = ['text/plain', a.download, a.href].join(':');
+    a.click();
+    // $('#export-link').css('display', '');
+    // $('#export-link').click();
 }
 
 /**

@@ -16,6 +16,10 @@
         width: 70%; }
     #header #title-edit {
         border: none;}
+    #header #popmenu {
+        padding-top: 3px;
+        font-size: 4.9rem;
+    }
 
 #description {
     padding-left: 1rem; 
@@ -226,3 +230,9 @@
         margin: auto;
         display: inline-block;
         vertical-align: middle; }
+
+/* メニューポップアップ */
+ul.floating-menu.animated.fadeInPosition {
+    background: #09c;} 
+    ul.floating-menu[data-fm-floated="top"]:before{
+    border-top: 9px solid #09c !important;} 

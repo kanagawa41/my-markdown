@@ -13,6 +13,7 @@
   <link rel="stylesheet" type="text/css" href="assets/css/index/index.css">
   <link rel="stylesheet" type="text/css" href="assets/vandor/bootstrap-v3-3-7/css/bootstrap.min.css">
   <link rel="stylesheet" type="text/css" href="assets/vandor/ace/css/ace_ime_jp_font.css">
+  <link rel="stylesheet" type="text/css" href="assets/vandor/floatingMenu/css/floating-menu.min.css">
 </head>
   <body>
     <div id="page-wrapper">
@@ -27,7 +28,7 @@
             Show state
           </div>
         </div>
-      </header>
+    </header>
       <!-- Main -->
       <div id="main-wrapper">
         <div id="main">
@@ -37,11 +38,8 @@
                 <a href="#" data-toggle="tooltip" title="ノートの変更"><select id="target-note"></select></a>
                 <a href="#" data-toggle="tooltip" title="ノートを追加"><span class="glyphicon glyphicon-plus-sign" onclick="indexController.addNote();"></span></a>
                 <a href="#" data-toggle="tooltip" title="ノートを削除"><span class="glyphicon glyphicon-minus-sign" onclick="indexController.removeNote();"></span></a>
-                <a href="#" data-toggle="tooltip" title="変数の設定"><span class="glyphicon glyphicon glyphicon-usd" onclick="$('#variables-modal').modal('show');"></span></a>
-                <a href="#" data-toggle="tooltip" title="エクスポート" id="export-link"><span class="glyphicon glyphicon-export" onclick="indexController.exportData();"></span></a>
-                <a href="#" data-toggle="tooltip" title="インポート"><span class="glyphicon glyphicon-import" onclick="indexController.importData();"></span></a>
-                <a href="#" data-toggle="tooltip" title="設定をリセット"><span class="glyphicon glyphicon-floppy-remove" onclick="indexController.resetSetting();"></span></a>
-                <a href="#" data-toggle="tooltip" title="使い方" class="last-icon"><span class="glyphicon glyphicon-question-sign" onclick="$('#simbol-list-modal').modal('show');"></span></a>
+                <a href="#"><span class="glyphicon glyphicon-cog icon-more"></span></a>
+                <a href="#" title="エクスポート" id="export-link" style="display: none;"></a>
                 <input id="fileupload" type="file" style="display:none;">
               </div>
             </div>
@@ -179,6 +177,7 @@
     <script type="text/javascript" src="assets/vandor/bootstrap-v3-3-7/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="assets/vandor/store/js/store.min.js"></script>
     <script type="text/javascript" src="assets/vandor/ace/js/ace.js"></script>
+    <script type="text/javascript" src="assets/vandor/floatingMenu/js/floating-menu.min.js"></script>
 
     <script type="text/javascript">
       var indexController;
