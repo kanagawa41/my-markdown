@@ -286,7 +286,8 @@ IndexController.prototype.initEvent = function() {
         var selectionRange = controller.editor.getSelectionRange();
 
         var startLine = selectionRange.start.row;
-        var endLine = selectionRange.end.row; // 調整が必要
+        // FIXME: 行数を＋１して選択されるが、カーソル移動のイベントでもチェンジする必要があるかな。
+        var endLine = selectionRange.end.row + 1;
 
         $('#sidebar-area .my_row').each(function(i, content){
             var rowNumber = $(this).attr('id').split('row-')[1];
@@ -491,8 +492,6 @@ IndexController.prototype.exportData = function() {
     a.href = window.URL.createObjectURL(new Blob([data], { type: 'text/plain' }));
     a.dataset.downloadurl = ['text/plain', a.download, a.href].join(':');
     a.click();
-    // $('#export-link').css('display', '');
-    // $('#export-link').click();
 }
 
 /**
