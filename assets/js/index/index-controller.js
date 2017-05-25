@@ -168,6 +168,13 @@ IndexController.prototype.initVisual = function() {
                 },
                 close : true,
             },
+            {
+                title : 'コントリビュート',
+                action : function(event) {
+                    location.href = 'https://github.com/kanagawa41/my-markdown';
+                },
+                close : true,
+            },
         ]
     });
     // $fm.on('afterShow', function(event){
