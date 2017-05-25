@@ -758,7 +758,8 @@ IndexController.prototype.setEventAfterDraw = function() {
     // sidebarとmainの各行の高さを取得して高さを合わせる。
     $('#main-area .my_row').each(function(i){
         var that = this;
-        $('#sidebar-area #row-' + i).height($(this).height());
+        var rowNumber = $(this).attr('id').split('row-')[1];
+        $('#sidebar-area #row-' + rowNumber).height($(this).height());
     });
 }
 
@@ -774,12 +775,11 @@ IndexController.prototype.updateVisual = function() {
 
     var elements = this.charAnalysis(content);
 
-    var elementSideBarHtml = this.constructSidebarHtml(elements);
-
     var elementMainHtml = this.constructMainHtml(elements);
-
-    $('#sidebar-area').append(elementSideBarHtml);
     $('#main-area').append(elementMainHtml);
+
+    var elementSideBarHtml = this.constructSidebarHtml(elements);
+    $('#sidebar-area').append(elementSideBarHtml);
 }
 
 /**
@@ -1240,7 +1240,7 @@ IndexController.prototype.toElement = function(content, variables) {
         /**
          * 特別指定のURLをアンカーに変換する
          */
-        temp = function(content) {
+        var replaceTemp = function(content) {
             var regexp_url = /「(.+)」（((?:h?)(ttps?:\/\/[a-zA-Z0-9.\-_@:/~?%&;=+#',*!]+))）/g;
             var regexp_makeLink = function(all, text, url, href) {
                 return '<a href="h' + href + '" target="_blank">' + text + '</a>';
@@ -1249,19 +1249,27 @@ IndexController.prototype.toElement = function(content, variables) {
             return content.replace(regexp_url, regexp_makeLink);
         }(temp);
 
-        /**
-         * 通常のURLをアンカーに変換する
-         */
-        temp = function(content) {
-            var regexp_url = /\s+((?:h?)(ttps?:\/\/[a-zA-Z0-9.\-_@:/~?%&;=+#',*!]+))/g;
-            var regexp_makeLink = function(all, url, href) {
-                return '<a href="h' + href + '" target="_blank">' + url + '</a>';
-            }
+        // URLの文字化が指定されていなかった
+        if(temp == replaceTemp){
+            /**
+             * 通常のURLをアンカーに変換する
+             */
+            replaceTemp = function(content) {
+                var regexp_url = /\s*((?:h?)(ttps?:\/\/[a-zA-Z0-9.\-_@:/~?%&;=+#',*!]+))/g;
+                var regexp_makeLink = function(all, url, href) {
+                    // 文字を削る
+                    if(url.length > Enum.CONFIG.MAX_URL_LENGTH) {
+                        url = url.substr(0, Enum.CONFIG.MAX_URL_LENGTH) + '...';
+                    }
 
-            return content.replace(regexp_url, regexp_makeLink);
-        }(temp);
+                    return '<a href="h' + href + '" target="_blank">' + url + '</a>';
+                }
 
-        return temp;
+                return content.replace(regexp_url, regexp_makeLink);
+            }(temp);
+        }
+
+        return replaceTemp;
     }(content);
 
     //生の記載内容
