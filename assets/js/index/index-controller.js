@@ -23,6 +23,41 @@ IndexController.ELEMENT = {
 }
 
 /**
+ * ドキュメントタイプ
+ */
+IndexController.DOCUMENT = {
+    CONTENT: 0,
+    TITLE: 1,
+    DELETE_FLAG: 2,
+}
+
+/**
+ * 指定タイプのドキュメント配列を返却する。
+ */
+IndexController.getDocuments = function(rawDocs, deleteFlag){
+    var resultDoc = [];
+    for(var key in rawDocs){
+        if(rawDocs[key][IndexController.DOCUMENT.DELETE_FLAG] == deleteFlag){
+            resultDoc.push(rawDocs[key][IndexController.DOCUMENT.CONTENT]);
+        }
+    }
+    return resultDoc;
+}
+
+/**
+ * 指定タイプのタイトル配列を返却する。
+ */
+IndexController.getTitles = function(rawDocs, deleteFlag){
+    var titles = [];
+    for(var key in rawDocs){
+        if(rawDocs[key][IndexController.DOCUMENT.DELETE_FLAG] == deleteFlag){
+            titles.push(rawDocs[key][IndexController.DOCUMENT.TITLE]);
+        }
+    }
+    return titles;
+}
+
+/**
  * エレメントタイプenum
  */
 IndexController.ELEMENT_TYPE = {
@@ -66,8 +101,7 @@ IndexController.prototype.init = function() {
 IndexController.prototype.initLocalstrage = function() {
     // メモの初期化
     if(!store.get(Enum.STOREKEY.DOCUMENTS)){
-        store.set(Enum.STOREKEY.DOCUMENT_TITLES, {0: Enum.CONFIG.DEFAULT_TITLE});
-        store.set(Enum.STOREKEY.DOCUMENTS, {0: ""});
+        store.set(Enum.STOREKEY.DOCUMENTS, {0: ["", Enum.CONFIG.DEFAULT_TITLE, false]});
         store.set(Enum.STOREKEY.SELECT_DOCUMENT, 0);
 
         var datas = [];
@@ -93,7 +127,7 @@ IndexController.prototype.initVisual = function() {
     this.resize();
 
     // コンボボックスの作成
-    this.createTitlebox(store.get(Enum.STOREKEY.DOCUMENT_TITLES), store.get(Enum.STOREKEY.SELECT_DOCUMENT));
+    this.createTitlebox(IndexController.getTitles(store.get(Enum.STOREKEY.DOCUMENTS), false), store.get(Enum.STOREKEY.SELECT_DOCUMENT));
 
     var variables = store.get(Enum.STOREKEY.VARIABLES);
     this.createVariableTable(variables);
@@ -107,9 +141,10 @@ IndexController.prototype.initVisual = function() {
     this.editor.$blockScrolling = Infinity;
     this.Range = ace.require('ace/range').Range;
 
-    var lastDocument = store.get(Enum.STOREKEY.DOCUMENTS);
-    if(lastDocument){
-        this.editor.setValue(lastDocument[store.get(Enum.STOREKEY.SELECT_DOCUMENT)]);
+    var docs = store.get(Enum.STOREKEY.DOCUMENTS);
+    if(docs){
+        var targetDocs = IndexController.getDocuments(docs, false);
+        this.editor.setValue(targetDocs[store.get(Enum.STOREKEY.SELECT_DOCUMENT)]);
     }
 
     var variables = store.get(Enum.STOREKEY.VARIABLES);
@@ -272,7 +307,7 @@ IndexController.prototype.initEvent = function() {
 
                 var tempDocs = store.get(Enum.STOREKEY.DOCUMENTS);
                 var targetNum = $('#target-note').val();
-                tempDocs[targetNum] = contentNew;
+                tempDocs[targetNum] = [contentNew, Enum.CONFIG.DEFAULT_TITLE, false];
 
                 store.set(Enum.STOREKEY.DOCUMENTS, tempDocs);
                 store.set(Enum.STOREKEY.SELECT_DOCUMENT, targetNum);
@@ -315,7 +350,8 @@ IndexController.prototype.initEvent = function() {
         store.set(Enum.STOREKEY.SELECT_DOCUMENT, $(this).val());
 
         var docs = store.get(Enum.STOREKEY.DOCUMENTS);
-        controller.editor.setValue(docs[$(this).val()]);
+        var targetDocs = IndexController.getDocuments(docs, false);
+        controller.editor.setValue(targetDocs[$(this).val()]);
 
         // 値を入れることにより選択状態になるため解除
         controller.editor.gotoLine(0, 0, true);
@@ -385,10 +421,7 @@ IndexController.prototype.initEvent = function() {
     $("#fileupload").on('change', function() {
         var input = $('#fileupload').get(0);
         if(input.files.length == 0){ 
-            console.log('No selected file!');
             return;
-        } else {
-            console.log('Selected file!');
         }
 
         var fileReader = new FileReader();
@@ -396,7 +429,6 @@ IndexController.prototype.initEvent = function() {
             var importDatas = JSON.parse(fileReader.result);
 
             // インポートしたデータを設定
-            store.set(Enum.STOREKEY.DOCUMENT_TITLES, importDatas["DOCUMENT_TITLES"]),
             store.set(Enum.STOREKEY.DOCUMENTS, importDatas["DOCUMENTS"]),
             store.set(Enum.STOREKEY.SELECT_DOCUMENT, importDatas["SELECT_DOCUMENT"]),
             store.set(Enum.STOREKEY.VARIABLES, importDatas["VARIABLES"]),
@@ -487,7 +519,6 @@ IndexController.prototype.outputMessage = function(message) {
  */
 IndexController.prototype.exportData = function() {
     var tasks = {
-        "DOCUMENT_TITLES": store.get(Enum.STOREKEY.DOCUMENT_TITLES),
         "DOCUMENTS": store.get(Enum.STOREKEY.DOCUMENTS),
         "SELECT_DOCUMENT": store.get(Enum.STOREKEY.SELECT_DOCUMENT),
         "VARIABLES": store.get(Enum.STOREKEY.VARIABLES),
@@ -516,29 +547,79 @@ IndexController.prototype.addNote = function() {
 
     controller.changeVisualSpeed = 500;
 
-    var documents = store.get(Enum.STOREKEY.DOCUMENTS);
-    var titles = store.get(Enum.STOREKEY.DOCUMENT_TITLES);
+    var docs = store.get(Enum.STOREKEY.DOCUMENTS);
     var selected = parseInt($('#target-note').children('option:last-child').val()) + 1;
 
     // ノートを追加
-    documents[selected] = "";
-    titles[selected] = Enum.CONFIG.DEFAULT_TITLE;
+    docs[selected] = ["", Enum.CONFIG.DEFAULT_TITLE, false];
 
-    store.set(Enum.STOREKEY.DOCUMENTS, documents);
-    store.set(Enum.STOREKEY.DOCUMENT_TITLES, titles);
+    store.set(Enum.STOREKEY.DOCUMENTS, docs);
     store.set(Enum.STOREKEY.SELECT_DOCUMENT, selected);
 
     // テキストの初期化
     controller.editor.setValue("");
     // コンボボックスの作成
     $('#target-note option').remove('');
-    controller.createTitlebox(titles, selected);
+    controller.createTitlebox(IndexController.getTitles(docs, false), selected);
     $('#title-edit').val($('#target-note').find('option:selected').text());
 
     controller.changeVisualSpeed = Enum.CONFIG.CHANGE_VISUAL_DEFALT_SPEED;
     controller.outputMessage('Add a note!');
 }
 
+/**
+ * ノートを削除する。
+ */
+IndexController.prototype.removeNote = function() {
+    var controller = this;
+    controller.changeVisualSpeed = 500;
+
+    // 最後のノート
+    if($('#target-note').children().length == 1){
+        controller.outputMessage('Can\'t remove a note!');
+        return;
+    }
+
+    if(!confirm('ノートを削除しますか？')){
+        controller.changeVisualSpeed = Enum.CONFIG.CHANGE_VISUAL_DEFALT_SPEED;
+        return false;
+    }
+
+    var docs = store.get(Enum.STOREKEY.DOCUMENTS);
+    var selected = $('#target-note').val();
+
+    docs[selected][IndexController.DOCUMENT.DLETE_FLAG] = true;
+
+    var count = 0;
+
+    var alreadyRemove = false;
+    var aheadVal = $('#target-note option:first-child').val();
+    var aheadTitle = $('#target-note option:first-child').text();
+    $('#target-note option').each(function(i, content){
+        if($(this).val() == selected){
+            $(this).remove();
+            alreadyRemove = true;
+            count = i - 1;
+        }
+    });
+
+    // ラスト一つの場合、初回を選択して削除した場合
+    if($('#target-note').children().length == 1 || count < 0){
+        count = 0;
+    }
+
+    var nextTarget = $('#target-note option').eq(count);
+    store.set(Enum.STOREKEY.DOCUMENTS, docs);
+    store.set(Enum.STOREKEY.SELECT_DOCUMENT, $(nextTarget).val());
+
+    // テキストの初期化
+    controller.editor.setValue(docs[$(nextTarget).val()][IndexController.DOCUMENT.CONTENT]);
+    $('#title-edit').val($(nextTarget).text());
+    $(nextTarget).prop('selected', true);
+
+    controller.changeVisualSpeed = Enum.CONFIG.CHANGE_VISUAL_DEFALT_SPEED;
+    controller.outputMessage('Remove a note!');
+}
 
 /**
  * 指定された行をタスク済にする。
@@ -571,63 +652,6 @@ IndexController.prototype.unCheckeTask = function(index) {
 }
 
 /**
- * ノートを削除する。
- */
-IndexController.prototype.removeNote = function() {
-    var controller = this;
-    controller.changeVisualSpeed = 500;
-
-    // 最後のノート
-    if($('#target-note').children().length == 1){
-        controller.outputMessage('Can\'t remove a note!');
-        return;
-    }
-
-    if(!confirm('ノートを削除しますか？')){
-        controller.changeVisualSpeed = Enum.CONFIG.CHANGE_VISUAL_DEFALT_SPEED;
-        return false;
-    }
-
-    var documents = store.get(Enum.STOREKEY.DOCUMENTS);
-    var titles = store.get(Enum.STOREKEY.DOCUMENT_TITLES);
-    var selected = $('#target-note').val();
-
-    delete documents[selected];
-    delete titles[selected];
-
-    var count = 0;
-
-    var alreadyRemove = false;
-    var aheadVal = $('#target-note option:first-child').val();
-    var aheadTitle = $('#target-note option:first-child').text();
-    $('#target-note option').each(function(i, content){
-        if($(this).val() == selected){
-            $(this).remove();
-            alreadyRemove = true;
-            count = i - 1;
-        }
-    });
-
-    // ラスト一つの場合、初回を選択して削除した場合
-    if($('#target-note').children().length == 1 || count < 0){
-        count = 0;
-    }
-
-    var nextTarget = $('#target-note option').eq(count);
-    store.set(Enum.STOREKEY.DOCUMENTS, documents);
-    store.set(Enum.STOREKEY.DOCUMENT_TITLES, titles);
-    store.set(Enum.STOREKEY.SELECT_DOCUMENT, $(nextTarget).val());
-
-    // テキストの初期化
-    controller.editor.setValue(documents[$(nextTarget).val()]);
-    $('#title-edit').val($(nextTarget).text());
-    $(nextTarget).prop('selected', true);
-
-    controller.changeVisualSpeed = Enum.CONFIG.CHANGE_VISUAL_DEFALT_SPEED;
-    controller.outputMessage('Remove a note!');
-}
-
-/**
  * ローカルストレージをリセットする。
  */
 IndexController.prototype.resetSetting = function() {
@@ -635,7 +659,6 @@ IndexController.prototype.resetSetting = function() {
         return false;
     }
 
-    store.remove(Enum.STOREKEY.DOCUMENT_TITLES);
     store.remove(Enum.STOREKEY.DOCUMENTS);
     store.remove(Enum.STOREKEY.SELECT_DOCUMENT);
     store.remove(Enum.STOREKEY.VARIABLES);

@@ -117,6 +117,8 @@
             #main-area .my_row .my-content { /* タスク内容 */
                 /*float: left;*/
                 line-height: 3rem; }
+                #main-area .my_row .my-content a { /* タスク内容 */
+                    color: #09c; }
 
 /* エリアの設定 */
 #sidebar-area {
