@@ -22,6 +22,8 @@ var Enum = {
 	 DONE : "■",
 	 SUPPLEMENT : "→",
 	 COMMENT : "＊",
+	 QUESTION : "？",
+	 INFO : "！",
 	 CONCLUSION : "＃",
 	},
 

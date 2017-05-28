@@ -986,6 +986,10 @@ IndexController.prototype.toMainHtml = function(element) {
             return this.createSupplementHtml(element);
         } else if(mark == Enum.MARK.COMMENT) {
             return this.createCommentHtml(element);
+        } else if(mark == Enum.MARK.QUESTION) {
+            return this.createQuestionHtml(element);
+        } else if(mark == Enum.MARK.INFO) {
+            return this.createInfoHtml(element);
         } else if(mark == Enum.MARK.CONCLUSION) {
             return this.createConclusionHtml(element);
         }
@@ -1121,6 +1125,50 @@ IndexController.prototype.createCommentHtml = function(element) {
 
     var symbol = 'mark-comment';
     var markIcon = 'glyphicon glyphicon-asterisk';
+
+    var htmlChar = '';
+    htmlChar += '<div id="row-' + index + '" class="my_row ' + symbol + ' focusout">';
+    htmlChar += ' <div class="my-indent" style="margin-left:' + indent + 'em;">';
+    htmlChar += '  <span class="my-mark ' + markIcon + '"></span>';
+    htmlChar += '  <div class="my-content char-font">' + content + '</div>';
+    htmlChar += ' </div>';
+    htmlChar += '</div>';       
+
+    return htmlChar;
+}
+
+/**
+ * 疑問の要素を作成する
+ */
+IndexController.prototype.createQuestionHtml = function(element) {
+    var index = element[IndexController.ELEMENT.INDEX];
+    var indent = element[IndexController.ELEMENT.INDENT];
+    var content = element[IndexController.ELEMENT.CONTENT] != null ? element[IndexController.ELEMENT.CONTENT] : '';
+
+    var symbol = 'mark-question';
+    var markIcon = 'glyphicon glyphicon-question-sign';
+
+    var htmlChar = '';
+    htmlChar += '<div id="row-' + index + '" class="my_row ' + symbol + ' focusout">';
+    htmlChar += ' <div class="my-indent" style="margin-left:' + indent + 'em;">';
+    htmlChar += '  <span class="my-mark ' + markIcon + '"></span>';
+    htmlChar += '  <div class="my-content char-font">' + content + '</div>';
+    htmlChar += ' </div>';
+    htmlChar += '</div>';       
+
+    return htmlChar;
+}
+
+/**
+ * 疑問の要素を作成する
+ */
+IndexController.prototype.createInfoHtml = function(element) {
+    var index = element[IndexController.ELEMENT.INDEX];
+    var indent = element[IndexController.ELEMENT.INDENT];
+    var content = element[IndexController.ELEMENT.CONTENT] != null ? element[IndexController.ELEMENT.CONTENT] : '';
+
+    var symbol = 'mark-info';
+    var markIcon = 'glyphicon glyphicon-info-sign';
 
     var htmlChar = '';
     htmlChar += '<div id="row-' + index + '" class="my_row ' + symbol + ' focusout">';
