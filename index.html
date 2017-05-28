@@ -38,6 +38,7 @@
                 <a href="#" data-toggle="tooltip" title="ノートの変更"><select id="target-note"></select></a>
                 <a href="#" data-toggle="tooltip" title="ノートを追加"><span class="glyphicon glyphicon-plus-sign" onclick="indexController.addNote();"></span></a>
                 <a href="#" data-toggle="tooltip" title="ノートを削除"><span class="glyphicon glyphicon-minus-sign" onclick="indexController.removeNote();"></span></a>
+                <a href="#" data-toggle="tooltip" title="ゴミ箱"><span class="glyphicon glyphicon-trash" onclick="indexController.trashNote();"></span></a>
                 <a href="#"><span class="glyphicon glyphicon-th icon-more"></span></a>
                 <a href="#" title="エクスポート" id="export-link" style="display: none;"></a>
                 <input id="fileupload" type="file" style="display:none;">
@@ -138,7 +139,7 @@
       </div>
     </div>
 
-    <!--　サンプルポップアップ　-->
+    <!--　変数ポップアップ　-->
     <div class="modal fade" id="variables-modal" tabindex="-1" role="dialog">
       <div class="modal-dialog">
         <div class="modal-content">
@@ -159,6 +160,32 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal" onclick="indexController.saveVaiable();">保存</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!--　ゴミ箱ポップアップ　-->
+    <div class="modal fade" id="trash-modal" tabindex="-1" role="dialog">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            <h4 class="modal-title"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span>　ゴミ箱</h4>
+          </div>
+          <div class="modal-body on-scroll">
+            <table class="table table-striped">
+              <tr>
+                <td></td><td>タイトル</td><td>内容</td>
+              </tr>
+              <tr class="row-var">
+                <td>1</td><td><input type="input" name="variable-name"></td><td><input type="input" name="variable-value"></td>
+              </tr>
+            </table><td></td>
+            <span>＊戻したいファイルを選択して下さい。</span>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal" onclick="indexController.backNote();">元に戻す</button>
           </div>
         </div>
       </div>

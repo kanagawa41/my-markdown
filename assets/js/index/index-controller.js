@@ -35,10 +35,10 @@ IndexController.DOCUMENT = {
  * 指定タイプのドキュメント配列を返却する。
  */
 IndexController.getDocuments = function(rawDocs, deleteFlag){
-    var resultDoc = [];
+    var resultDoc = {};
     for(var key in rawDocs){
         if(rawDocs[key][IndexController.DOCUMENT.DELETE_FLAG] == deleteFlag){
-            resultDoc.push(rawDocs[key][IndexController.DOCUMENT.CONTENT]);
+            resultDoc[key] = rawDocs[key][IndexController.DOCUMENT.CONTENT];
         }
     }
     return resultDoc;
@@ -48,10 +48,10 @@ IndexController.getDocuments = function(rawDocs, deleteFlag){
  * 指定タイプのタイトル配列を返却する。
  */
 IndexController.getTitles = function(rawDocs, deleteFlag){
-    var titles = [];
+    var titles = {};
     for(var key in rawDocs){
         if(rawDocs[key][IndexController.DOCUMENT.DELETE_FLAG] == deleteFlag){
-            titles.push(rawDocs[key][IndexController.DOCUMENT.TITLE]);
+            titles[key] = rawDocs[key][IndexController.DOCUMENT.TITLE];
         }
     }
     return titles;
@@ -275,6 +275,39 @@ IndexController.prototype.createVariableTable = function(variables) {
     table.html(trs);
 };
 
+/**
+ * ゴミ箱項目を作成
+ */
+IndexController.prototype.createTrashTable = function(docs) {
+    var table = $('#trash-modal table');
+
+    var trs = '';
+    trs += '<thead>';
+    trs += ' <tr>';
+    trs += '  <td></td><td>タイトル</td><td>内容</td>';
+    trs += ' </tr>';
+    trs += '</thead>';
+
+    $.each(docs, function(i, content){
+        var doc = docs[i];
+
+        if(!doc[IndexController.DOCUMENT.DELETE_FLAG]){
+            return true;
+        }
+
+        var tr = '';
+        tr += '<tr class="row-var">';
+        tr += ' <td><input type="checkbox" class="delete-flag" name="delete-flag" value="' + i + '"></td>';
+        tr += ' <td><input type="input" name="title" class="form-control" value="' + doc[IndexController.DOCUMENT.TITLE] + '" readonly></td>';
+        tr += ' <td><input type="input" name="content" class="form-control" value="' + doc[IndexController.DOCUMENT.CONTENT].substr(0, 50) + '" readonly></td>';
+        tr += '</tr>';
+
+        trs += tr;
+    });
+
+    table.html(trs);
+};
+
 IndexController.prototype.resize = function() {
     // 高さに影響を与える要素ができた場合、それを引くようにする
     $('#making-area #ace_editor').height(this.windowHeight);
@@ -307,7 +340,7 @@ IndexController.prototype.initEvent = function() {
 
                 var tempDocs = store.get(Enum.STOREKEY.DOCUMENTS);
                 var targetNum = $('#target-note').val();
-                tempDocs[targetNum] = [contentNew, Enum.CONFIG.DEFAULT_TITLE, false];
+                tempDocs[targetNum][IndexController.DOCUMENT.CONTENT] = contentNew;
 
                 store.set(Enum.STOREKEY.DOCUMENTS, tempDocs);
                 store.set(Enum.STOREKEY.SELECT_DOCUMENT, targetNum);
@@ -400,7 +433,7 @@ IndexController.prototype.initEvent = function() {
     $('#title-edit').blur(function() {
         // タイトルをセレクトボックスORストレージに登録する
         var targetNum = parseInt($('#target-note').val());
-        var titles = {};
+        var docs = store.get(Enum.STOREKEY.DOCUMENTS);
         $('#target-note option').each(function(i, content){
             if($(this).val() == targetNum){
                 var title = $('#title-edit').val();
@@ -409,11 +442,14 @@ IndexController.prototype.initEvent = function() {
                 } else {
                     $(this).text(Enum.CONFIG.DEFAULT_TITLE + (targetNum + 1));
                 }
+                docs[$(this).val()][IndexController.DOCUMENT.TITLE] = $(this).text();
+                return false;
             }
-            titles[$(this).val()] = $(this).text();
+
+            return true;
         });
 
-        store.set(Enum.STOREKEY.DOCUMENT_TITLES, titles);
+        store.set(Enum.STOREKEY.DOCUMENTS, docs);
         controller.outputMessage('Title saved!');
     });
 
@@ -470,6 +506,31 @@ IndexController.prototype.saveVaiable = function() {
     });
 
     store.set(Enum.STOREKEY.VARIABLES, datas);
+}
+
+/**
+ * 対象のノートを元に戻す
+ */
+IndexController.prototype.backNote = function() {
+    var controller = this;
+
+    if(!confirm('ノートを元に戻しますか？')){
+        return false;
+    }
+
+    var docs = store.get(Enum.STOREKEY.DOCUMENTS);
+    $('#trash-modal .row-var').each(function(i, content){
+        if($(this).find('[name="delete-flag"]').prop('checked')){
+            docs[$(this).find('[name="delete-flag"]').val()][IndexController.DOCUMENT.DELETE_FLAG] = false;
+        }
+    });
+
+    var selected = $('#target-note').val();
+    // コンボボックスの作成
+    $('#target-note option').remove('');
+    controller.createTitlebox(IndexController.getTitles(docs, false), selected);
+
+    store.set(Enum.STOREKEY.DOCUMENTS, docs);
 }
 
 /**
@@ -548,7 +609,7 @@ IndexController.prototype.addNote = function() {
     controller.changeVisualSpeed = 500;
 
     var docs = store.get(Enum.STOREKEY.DOCUMENTS);
-    var selected = parseInt($('#target-note').children('option:last-child').val()) + 1;
+    var selected = (Object.keys(docs).length - 1) + 1;
 
     // ノートを追加
     docs[selected] = ["", Enum.CONFIG.DEFAULT_TITLE, false];
@@ -588,7 +649,7 @@ IndexController.prototype.removeNote = function() {
     var docs = store.get(Enum.STOREKEY.DOCUMENTS);
     var selected = $('#target-note').val();
 
-    docs[selected][IndexController.DOCUMENT.DLETE_FLAG] = true;
+    docs[selected][IndexController.DOCUMENT.DELETE_FLAG] = true;
 
     var count = 0;
 
@@ -619,6 +680,18 @@ IndexController.prototype.removeNote = function() {
 
     controller.changeVisualSpeed = Enum.CONFIG.CHANGE_VISUAL_DEFALT_SPEED;
     controller.outputMessage('Remove a note!');
+}
+
+
+/**
+ * ノートを追加する。
+ */
+IndexController.prototype.trashNote = function() {
+    var controller = this;
+
+    controller.createTrashTable(store.get(Enum.STOREKEY.DOCUMENTS));
+
+    $('#trash-modal').modal('show');
 }
 
 /**

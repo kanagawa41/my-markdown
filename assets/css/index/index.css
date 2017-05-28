@@ -201,8 +201,23 @@
     border: none; }
     #variables-modal table tr.row-var td {
         text-align: right; }
-        #variables-modal table tr.row-var td input{
+        #variables-modal table tr.row-var td input {
             border: none; }
+
+#trash-modal .on-scroll{
+    overflow: auto; 
+    max-height: 500px; }
+    #trash-modal .modal-body {
+        height: 500px; }
+        #trash-modal table {
+            font-size: 20px;
+            border: none; }
+                #trash-modal table tr.row-var td input.delete-flag {
+                    margin: 13px 0 0 13px;
+                    transform: scale(2.5); }
+                #trash-modal table tr.row-var td input{
+                    border: none;
+                }
 
 #simbol-list-modal .on-scroll{
     overflow: auto; 
