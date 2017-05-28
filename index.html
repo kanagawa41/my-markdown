@@ -36,11 +36,13 @@
             <div id="making-title-wrapper">
               <div class="title">RAW MARK
                 <a href="#" data-toggle="tooltip" title="ノートの変更"><select id="target-note"></select></a>
-                <a href="#" data-toggle="tooltip" title="ノートを追加"><span class="glyphicon glyphicon-plus-sign" onclick="indexController.addNote();"></span></a>
-                <a href="#" data-toggle="tooltip" title="ノートを削除"><span class="glyphicon glyphicon-minus-sign" onclick="indexController.removeNote();"></span></a>
-                <a href="#" data-toggle="tooltip" title="ゴミ箱"><span class="glyphicon glyphicon-trash" onclick="indexController.trashNote();"></span></a>
+                <a href="#" data-toggle="tooltip" title="ノートを追加" onclick="indexController.addNote();"><span class="glyphicon glyphicon-plus-sign"></span></a>
+                <a href="#" data-toggle="tooltip" title="ノートを削除" onclick="indexController.removeNote();"><span class="glyphicon glyphicon-minus-sign"></span></a>
+                <a href="#" data-toggle="tooltip" title="ゴミ箱" onclick="indexController.trashNote();"><span class="glyphicon glyphicon-trash"></span></a>
                 <a href="#"><span class="glyphicon glyphicon-th icon-more"></span></a>
+                <!-- ファイルをダウンロードさせる際に使用 -->
                 <a href="#" title="エクスポート" id="export-link" style="display: none;"></a>
+                <!-- ファイルをアップロードさせる際に使用 -->
                 <input id="fileupload" type="file" style="display:none;">
               </div>
             </div>
