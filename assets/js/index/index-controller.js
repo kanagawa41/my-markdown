@@ -587,7 +587,7 @@ IndexController.prototype.exportData = function() {
      
     var data = JSON.stringify(tasks);
     var a = document.getElementById('export-link');
-    a.download = 'taskmark-settings.json';
+    a.download = 'taskmark-settings_' + myCommon.formatDateOnlyNumber(new Date()) + '.json';
     a.href = window.URL.createObjectURL(new Blob([data], { type: 'text/plain' }));
     a.dataset.downloadurl = ['text/plain', a.download, a.href].join(':');
     a.click();
@@ -684,7 +684,7 @@ IndexController.prototype.removeNote = function() {
 
 
 /**
- * ノートを追加する。
+ * ゴミ箱
  */
 IndexController.prototype.trashNote = function() {
     var controller = this;
@@ -740,6 +740,24 @@ IndexController.prototype.resetSetting = function() {
     location.reload();
 }
 
+/**
+ * ローカルストレージをエクスポートしてリセットする。
+ */
+IndexController.prototype.exportAndresetSetting = function() {
+    var controller = this;
+    if(!confirm('ノートの情報等をリセットしますか？(※リセット前に現データのエクスポートを行います)')){
+        return false;
+    }
+
+    indexController.exportData();
+
+    store.remove(Enum.STOREKEY.DOCUMENTS);
+    store.remove(Enum.STOREKEY.SELECT_DOCUMENT);
+    store.remove(Enum.STOREKEY.VARIABLES);
+
+    // 画面初期化
+    location.reload();
+}
 
 /**
  * 変数列を削除する。

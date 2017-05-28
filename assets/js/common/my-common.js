@@ -100,6 +100,31 @@ var myCommon = {
         
         return null;
     },
+
+    /**
+     * 日付を指定のフォーマットに変換する。
+     * 20160101
+     */
+    formatDateOnlyNumber: function (date){
+      var y = date.getFullYear();
+      var m = date.getMonth() + 1;
+      var d = date.getDate();
+      var w = date.getDay();
+
+      var result = y + myCommon.zerofill(m) + myCommon.zerofill(d);
+
+      return result;
+    },
+    
+    /**
+     * 時間が一桁の場合は先頭にゼロを付与する。
+     */
+    zerofill: function (value) {
+        if(value < 10) {
+            value = "0" + value;
+        }
+        return value;
+    },
     
     /**
      * フルパスのファイル名にサフィックスを付加する
@@ -118,16 +143,6 @@ var myCommon = {
       var fileExtension = fileInfo[fileInfo.length-1];
 
       return folderPath + '/' + fileNameOnly + suffixChar + '.' + fileExtension;
-    },
-    
-    /**
-     * 時間が一桁の場合は先頭にゼロを付与する。
-     */
-    zerofill: function (value) {
-        if(value < 10) {
-            value = "0" + value;
-        }
-        return value;
     },
     
     /**
