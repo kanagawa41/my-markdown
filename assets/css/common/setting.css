@@ -4,6 +4,7 @@ html {
 }
 
 body {
+	min-width: 1000px;
     overflow: hidden;
     font-size: 1.4rem;
     font-family: "times new roman";
