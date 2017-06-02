@@ -182,14 +182,14 @@ IndexController.prototype.initVisual = function() {
                 close : false,
             },
             {
-                title : '全てインポート',
+                title : 'インポート',
                 action : function(event) {
                     indexController.importDataAll();
                 },
                 close : true,
             },
             {
-                title : 'ノートをインポート',
+                title : 'ノートを追加',
                 action : function(event) {
                     indexController.importData();
                 },
@@ -210,7 +210,7 @@ IndexController.prototype.initVisual = function() {
                 close : true,
             },
             {
-                title : 'コントリビュート',
+                title : 'GIT',
                 action : function(event) {
                     location.href = 'https://github.com/kanagawa41/my-markdown';
                 },
