@@ -120,9 +120,8 @@ IndexController.prototype.initLocalstrage = function() {
 IndexController.prototype.initVisual = function() {    
     var controller = this;
 
-    this.windowHeight = Math.floor($(window).height())
-        - Math.floor($('#page-wrapper').height())
-        - Math.floor($('#making-title-wrapper').height());
+    // FIXME: 微調整分をロジカル的に求められるようにしたい
+    this.windowHeight = $(window).height() - $("#visual-area").position().top - 5;
 
     this.resize();
 
