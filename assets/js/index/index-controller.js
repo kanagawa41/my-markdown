@@ -183,7 +183,14 @@ IndexController.prototype.initVisual = function() {
                 close : false,
             },
             {
-                title : 'インポート',
+                title : '全てインポート',
+                action : function(event) {
+                    indexController.importDataAll();
+                },
+                close : true,
+            },
+            {
+                title : 'ノートをインポート',
                 action : function(event) {
                     indexController.importData();
                 },
@@ -464,10 +471,33 @@ IndexController.prototype.initEvent = function() {
         fileReader.onload = function(fileLoadedEvent){
             var importDatas = JSON.parse(fileReader.result);
 
-            // インポートしたデータを設定
-            store.set(Enum.STOREKEY.DOCUMENTS, importDatas["DOCUMENTS"]),
-            store.set(Enum.STOREKEY.SELECT_DOCUMENT, importDatas["SELECT_DOCUMENT"]),
-            store.set(Enum.STOREKEY.VARIABLES, importDatas["VARIABLES"]),
+            if($('#import-type').val() == 'all'){
+                // インポートしたデータを設定
+                store.set(Enum.STOREKEY.DOCUMENTS, importDatas["DOCUMENTS"]);
+                store.set(Enum.STOREKEY.SELECT_DOCUMENT, importDatas["SELECT_DOCUMENT"]);
+                store.set(Enum.STOREKEY.VARIABLES, importDatas["VARIABLES"]);
+            } else if($('#import-type').val() == 'note'){
+                var docs = store.get(Enum.STOREKEY.DOCUMENTS);
+                var number = (Object.keys(docs).length - 1);
+                var docs = store.get(Enum.STOREKEY.DOCUMENTS);
+                var selected = IndexController.getMaxNum(docs) + 1;
+
+                var importDocs = importDatas[Enum.STOREKEY.DOCUMENTS];
+                for (var num in importDocs) {
+                    var doc = importDocs[num];
+                    if(doc[IndexController.DOCUMENT.DELETE_FLAG]){
+                        continue;
+                    }
+
+                    // ノートを追加
+                    docs[IndexController.getMaxNum(docs) + 1] = doc;
+                }
+
+                // インポートしたデータを設定
+                store.set(Enum.STOREKEY.DOCUMENTS, docs);
+            } else {
+                console.log('None import type.');
+            }
 
             location.reload();
         };
@@ -596,8 +626,33 @@ IndexController.prototype.exportData = function() {
 /**
  * 指定のJSONファイルのデータをローカルストレージにインポートする。
  */
-IndexController.prototype.importData = function() {
+IndexController.prototype.importDataAll = function() {
+    $('#import-type').val('all');
     $('#fileupload').click();
+}
+
+/**
+ * 指定のJSONファイルのデータをローカルストレージにインポートする。
+ */
+IndexController.prototype.importData = function() {
+    $('#import-type').val('note');
+    $('#fileupload').click();
+}
+
+/**
+ * 対処うドキュメントオブジェクトの最大添え字数を返却する。
+ */
+IndexController.getMaxNum = function(documents) {
+    var count = Object.keys(documents).length;
+    var maxNum = null;
+    for(var num in documents) {
+        if(maxNum == null) {
+            maxNum = num;
+        } else if(maxNum < parseInt(num)){
+            maxNum = parseInt(num);
+        }
+    }
+    return parseInt(maxNum);
 }
 
 /**
@@ -609,7 +664,7 @@ IndexController.prototype.addNote = function() {
     controller.changeVisualSpeed = 500;
 
     var docs = store.get(Enum.STOREKEY.DOCUMENTS);
-    var selected = (Object.keys(docs).length - 1) + 1;
+    var selected = IndexController.getMaxNum(docs) + 1;
 
     // ノートを追加
     docs[selected] = ["", Enum.CONFIG.DEFAULT_TITLE, false];
@@ -876,12 +931,17 @@ IndexController.prototype.setEventAfterDraw = function() {
         });
     });
 
+    // 折り畳みエリアも対象とするため
+    controller.openRow();
+
     // sidebarとmainの各行の高さを取得して高さを合わせる。
     $('#main-area .my_row').each(function(i){
         var that = this;
         var rowNumber = $(this).attr('id').split('row-')[1];
         $('#sidebar-area #row-' + rowNumber).height($(this).height());
     });
+
+    controller.closeRow();
 }
 
 /**

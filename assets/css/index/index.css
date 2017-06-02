@@ -114,6 +114,10 @@
                 padding-right: 5px;
                 line-height: 2.5rem;
                 font-size: 1.9rem; }
+            #main-area .my_row .my-mark.glyphicon-unchecked { /* 未完了 */
+                cursor: pointer; }
+            #main-area .my_row .my-mark.glyphicon-check { /* 完了 */
+                cursor: pointer; }
             #main-area .my_row .my-content { /* タスク内容 */
                 /*float: left;*/
                 line-height: 3rem; }
