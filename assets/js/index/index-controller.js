@@ -539,14 +539,30 @@ IndexController.prototype.saveVaiable = function() {
 }
 
 /**
+ * 対象のノートを消す
+ */
+IndexController.prototype.deleteNote = function() {
+    var controller = this;
+
+    if(!confirm('ノートを削除しますか？')){
+        return false;
+    }
+
+    var docs = store.get(Enum.STOREKEY.DOCUMENTS);
+    $('#trash-modal .row-var').each(function(i, content){
+        if($(this).find('[name="delete-flag"]').prop('checked')){
+            delete docs[$(this).find('[name="delete-flag"]').val()];
+        }
+    });
+
+    store.set(Enum.STOREKEY.DOCUMENTS, docs);
+}
+
+/**
  * 対象のノートを元に戻す
  */
 IndexController.prototype.backNote = function() {
     var controller = this;
-
-    if(!confirm('ノートを元に戻しますか？')){
-        return false;
-    }
 
     var docs = store.get(Enum.STOREKEY.DOCUMENTS);
     $('#trash-modal .row-var').each(function(i, content){
@@ -694,11 +710,6 @@ IndexController.prototype.removeNote = function() {
     if($('#target-note').children().length == 1){
         controller.outputMessage('Can\'t remove a note!');
         return;
-    }
-
-    if(!confirm('ノートを削除しますか？')){
-        controller.changeVisualSpeed = Enum.CONFIG.CHANGE_VISUAL_DEFALT_SPEED;
-        return false;
     }
 
     var docs = store.get(Enum.STOREKEY.DOCUMENTS);
